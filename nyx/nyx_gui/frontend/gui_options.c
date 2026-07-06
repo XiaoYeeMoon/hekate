@@ -365,7 +365,7 @@ static lv_res_t _save_nyx_options_action(lv_obj_t *btn)
 	if (res)
 		lv_mbox_set_text(mbox, "#FF8000 Nyx配置#\n\n#96FF00 配置已保存到SD卡!#");
 	else
-		lv_mbox_set_text(mbox, "#FF8000 Nyx配置#\n\n#FFDD00 配置保存到SD卡#\n#FFDD00 失败!#");
+		lv_mbox_set_text(mbox, "#FF8000 Nyx配置#\n\n#FFDD00 配置保存#\n#FFDD00 失败!#");
 	lv_mbox_add_btns(mbox, mbox_btn_map, NULL);
 	lv_obj_align(mbox, NULL, LV_ALIGN_CENTER, 0, 0);
 	lv_obj_set_top(mbox, true);
@@ -702,7 +702,7 @@ lv_res_t _action_win_nyx_colors_close(lv_obj_t * btn)
 
 static lv_res_t _create_window_nyx_colors(lv_obj_t *btn)
 {
-	lv_obj_t *win = nyx_create_standard_window(SYMBOL_COPY" Nyx颜色主题", _action_win_nyx_colors_close);
+	lv_obj_t *win = nyx_create_standard_window(SYMBOL_COPY" Nyx颜色调整", _action_win_nyx_colors_close);
 	lv_win_add_btn(win, NULL, SYMBOL_SAVE" 保存并重新加载", _action_win_nyx_colors_save);
 	color_test.window = win;
 
@@ -727,7 +727,7 @@ static lv_res_t _create_window_nyx_colors(lv_obj_t *btn)
 	color_test.header1 = h1;
 
 	lv_obj_t *acc_label = lv_label_create(h1, NULL);
-	lv_label_set_static_text(acc_label, "高亮颜色:");
+	lv_label_set_static_text(acc_label, "强调色:");
 
 	// Create color preset buttons.
 	lv_obj_t *color_btn = lv_btn_create(h1, NULL);
@@ -768,7 +768,7 @@ static lv_res_t _create_window_nyx_colors(lv_obj_t *btn)
 	color_test.hue_label = hue_text_label;
 
 	lv_obj_t *bg_label = lv_label_create(win, NULL);
-	lv_label_set_static_text(bg_label, "主题颜色:");
+	lv_label_set_static_text(bg_label, "背景色:");
 	lv_obj_align(bg_label, h_slider, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI * 6 / 25);
 
 	// Create red slider.
@@ -855,13 +855,13 @@ static lv_res_t _create_window_nyx_colors(lv_obj_t *btn)
 	color_test.header2 = h2;
 
 	lv_obj_t *lbl_sample = lv_label_create(h2, NULL);
-	lv_label_set_static_text(lbl_sample, "高亮色示例:");
+	lv_label_set_static_text(lbl_sample, "强调色示例:");
 
 	lv_obj_t *lbl_test = lv_label_create(h2, NULL);
 	lv_label_set_long_mode(lbl_test, LV_LABEL_LONG_BREAK);
 	lv_label_set_static_text(lbl_test,
-		"Lorem ipsum dolor sit amet, consectetur adipisicing elit, "
-		"sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+		"The quick brown fox jumps over the lazy dog. 0123456789"
+		"这是一段用于预览强调色和文本显示效果的示例文字, 可用于检查界面颜色字体和换行效果.");
 	lv_obj_set_width(lbl_test, LV_DPI * 261 / 23);
 	lv_obj_align(lbl_test, lbl_sample, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 34);
 	color_test.label = lbl_test;
@@ -1037,9 +1037,9 @@ static lv_res_t _create_mbox_clock_edit(lv_obj_t *btn)
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 6);
 
-	lv_mbox_set_text(mbox, "输入Nyx的 #C7EA46 日期# 和 #C7EA46 时间#\n"
-						   "用于所有文件操作和菜单.\n"
-						   "不会修改实际HW时钟!");
+	lv_mbox_set_text(mbox, "请输入Nyx界面的 #C7EA46 日期# 和 #C7EA46 时间#.\n"
+						   "仅用于引导界面, 显示在屏幕左下角.\n"
+						   "不影响系统时间.");
 
 	lv_obj_t *padding = lv_cont_create(mbox, NULL);
 	lv_cont_set_fit(padding, true, false);
@@ -1346,8 +1346,8 @@ disabled_or_cal0_issue:;
 		if (!nx_hoag)
 		{
 			s_printf(txt_buf,
-				"转储到SD卡完成!\n"
-				"保存到: #C7EA46 switchroot/joycon_mac.[bin/ini]#\n\n");
+				"提取完成!\n"
+				"保存路径: #C7EA46 switchroot/joycon_mac.[bin/ini]#\n\n");
 
 			bool success = true;
 
@@ -1362,45 +1362,45 @@ disabled_or_cal0_issue:;
 
 			// Check if pairing was done in HOS.
 			if (is_l_hos && is_r_hos)
-				strcat(txt_buf, "#C7EA46 两个手柄配对数据均来自HOS!#");
+				strcat(txt_buf, "#C7EA46 配对数据来自官方系统!#");
 			else if (!is_l_hos && is_r_hos)
 			{
-				strcat(txt_buf, "#FF8000 警告:##FFDD00 左手柄# 配对数据并非来自HOS!");
+				strcat(txt_buf, "#FF8000 警告:# #FFDD00 左手柄# 配对数据并非官方系统!");
 				success = false;
 			}
 			else if (is_l_hos && !is_r_hos)
 			{
-				strcat(txt_buf, "#FF8000 警告:##FFDD00 右手柄# 配对数据并非来自HOS!");
+				strcat(txt_buf, "#FF8000 警告:# #FFDD00 右手柄# 配对数据并非官方系统!");
 				success = false;
 			}
 			else
 			{
-				strcat(txt_buf, "#FF8000 警告:##FFDD00 左右手柄# 配对数据均非来自HOS!");
+				strcat(txt_buf, "#FF8000 警告:# #FFDD00 左右手柄# 配对数据均为非官方系统!");
 				success = false;
 			}
 
 			if (!success)
 				strcat(txt_buf,
-					"\n\n#FFDD00 确保两个Joy-Con都已连接,#\n"
-					"#FFDD00 并且已在HOS中完成配对!#");
+					"\n\n#FFDD00 请确保两个Joy-Con手柄都已插上主机,#\n"
+					"#FFDD00 且已在官方系统中进行配对!#");
 
 			if (cal_error)
-				s_printf(txt_buf + strlen(txt_buf), "\n\n#FF8000 警告: 获取IMU校准失败 (%d)!#", cal_error);
+				s_printf(txt_buf + strlen(txt_buf), "\n\n#FF8000 警告: 获取体感校准数据失败 (%d)!#", cal_error);
 		}
 		else
 		{
 			s_printf(txt_buf,
-				"转储到SD卡完成!\n"
-				"已保存到: #C7EA46 switchroot/switch.cal#\n\n");
-			strcat(txt_buf, "#C7EA46 成功!#\n#C7EA46 已找到Lite手柄数据!#\n");
+				"提取完成!\n"
+				"保存路径: #C7EA46 switchroot/switch.cal#\n\n");
+			strcat(txt_buf, "#C7EA46 成功!#\n#C7EA46 检测到Lite手柄数据!#\n");
 		}
 	}
 	else
 	{
 		if (!nx_hoag)
-			s_printf(txt_buf, "#FFDD00 转储Joy-Con配对数据失败!#\n#FFDD00 错误: %d#", error);
+			s_printf(txt_buf, "#FFDD00 提取Joy-Con配对数据失败!#\n#FFDD00 错误: %d#", error);
 		else
-			s_printf(txt_buf, "#FFDD00 获取Lite手柄数据失败!#\n#FFDD00 错误: %d#", error);
+			s_printf(txt_buf, "#FFDD00 提取Lite手柄数据失败!#\n#FFDD00 错误: %d#", error);
 	}
 
 	lv_mbox_set_text(mbox, txt_buf);
@@ -1454,8 +1454,8 @@ static void _check_nyx_changes()
 
 		lv_mbox_set_text(mbox,
 			"#FF8000 Nyx配置#\n\n"
-			"您更改了配置!\n\n"
-			"保存吗?");
+			"有未保存的更改!\n\n"
+			"要保存吗?");
 
 		lv_mbox_add_btns(mbox, mbox_btn_map, _action_nyx_options_save);
 		lv_obj_set_width(mbox, LV_HOR_RES / 9 * 5);
@@ -1521,13 +1521,13 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_obj_t *btn = lv_btn_create(sw_h2, NULL);
 	lv_obj_t *label_btn = lv_label_create(btn, NULL);
 	lv_btn_set_fit(btn, true, true);
-	lv_label_set_static_text(label_btn, SYMBOL_COPY" 颜色主题");
+	lv_label_set_static_text(label_btn, SYMBOL_COPY" 界面颜色");
 	lv_obj_align(btn, label_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, -LV_DPI / 5 + 3);
 	lv_btn_set_action(btn, LV_BTN_ACTION_CLICK, _create_window_nyx_colors);
 
 	lv_obj_t *label_txt2 = lv_label_create(sw_h2, NULL);
 	lv_label_set_recolor(label_txt2, true);
-	lv_label_set_static_text(label_txt2, "自定义Nyx的 #C7EA46 主题色# 和 #C7EA46 高亮色#\n");
+	lv_label_set_static_text(label_txt2, "调整Nyx的 #C7EA46 背景色# 和 #C7EA46 强调色#\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3 - 8);
 
@@ -1547,10 +1547,10 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_obj_set_top(ddlist, true);
 	lv_ddlist_set_draw_arrow(ddlist, true);
 	lv_ddlist_set_options(ddlist,
-		"主菜单       \n"
-		"所有配置\n"
-		"启动\n"
-		"更多配置");
+		"主页       \n"
+		"全部引导\n"
+		"启动菜单\n"
+		"其他配置");
 	lv_ddlist_set_selected(ddlist, n_cfg.home_screen);
 	lv_ddlist_set_action(ddlist, _home_screen_action);
 	lv_obj_align(ddlist, label_txt, LV_ALIGN_OUT_RIGHT_MID, LV_DPI * 2 / 3, 0);
@@ -1558,9 +1558,9 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	label_txt2 = lv_label_create(l_cont, NULL);
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
-		"选择在Nyx启动时显示的屏幕.\n"
-		"#FF8000 所有配置:# #C7EA46 把 更多配置 合并到 启动 的空白处.#\n"
-		"#FF8000 启动 / 更多配置:# #C7EA46 使用经典的分割视图.#");
+		"选择引导启动时显示的画面.\n"
+		"#FF8000 全部引导:# #C7EA46 屏幕上显示全部启动引导选项.#\n"
+		"#FF8000 启动菜单/其他配置:# #C7EA46 和主页上点进相应按钮的界面相同.#");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, label_txt, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1569,7 +1569,7 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 
 	// Create entries per line button.
 	lv_obj_t *btn2 = lv_btn_create(sw_h2, NULL);
-	nyx_create_onoff_button(th, sw_h2, btn2, SYMBOL_GPS" 启动项扩展", _entries_columns_action, true);
+	nyx_create_onoff_button(th, sw_h2, btn2, SYMBOL_GPS" 扩展启动项", _entries_columns_action, true);
 	lv_obj_align(btn2, line_sep, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 10);
 	if (n_cfg.entries_5_col)
 		lv_btn_set_state(btn2, LV_BTN_STATE_TGL_REL);
@@ -1578,8 +1578,8 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	label_txt2 = lv_label_create(sw_h2, NULL);
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
-		"将启动项设置成每行5个. (默认是4)\n"
-		"#C7EA46 启动 和 更多配置 里#\n"
+		"将启动项界面扩展到每行5个. (默认为4)\n"
+		"#C7EA46 即启动菜单和其他配置里#\n"
 		"#C7EA46 最多可显示10个启动项.#\n\n\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn2, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 12);
@@ -1592,15 +1592,15 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_obj_t *btn3 = lv_btn_create(sw_h3, NULL);
 	lv_obj_t *label_btn3 = lv_label_create(btn3, NULL);
 	lv_btn_set_fit(btn3, true, true);
-	lv_label_set_static_text(label_btn3, SYMBOL_DOWNLOAD" 转储Joy-Con BT");
+	lv_label_set_static_text(label_btn3, SYMBOL_DOWNLOAD" 提取Joy-Con蓝牙信息");
 	lv_obj_align(btn3, label_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, -LV_DPI / 3);
 	lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, _joycon_info_dump_action);
 
 	label_txt2 = lv_label_create(sw_h3, NULL);
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
-		"允许您保存Switch和Joy-Con的MAC地址以及与之关联的LTKs信息.\n"
-		"用于 #C7EA46 Android# 和 #C7EA46 Linux#.");
+		"提取Switch和Joy-Con的MAC地址以及与之关联的配对信息.\n"
+		"用于 #C7EA46 Android# 和 #C7EA46 Linux# 系统.");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn3, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1626,8 +1626,8 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_ddlist_set_action(ddlist2, _data_verification_action);
 
 	label_txt2 = lv_label_create(sw_h3, NULL);
-	lv_label_set_static_text(label_txt2, "设置备份和恢复所进行的数据验证类型.\n"
-		"可以中止, 不会丢失备份/恢复.\n");
+	lv_label_set_static_text(label_txt2, "设置备份和恢复时使用的数据验证方式.\n"
+		"如不需要, 可以将其关闭.\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, label_txt, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1638,16 +1638,16 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_obj_t *btn5 = lv_btn_create(sw_h3, NULL);
 	lv_obj_t *label_btn5 = lv_label_create(btn5, NULL);
 	lv_btn_set_fit(btn5, true, true);
-	lv_label_set_static_text(label_btn5, SYMBOL_CLOCK" 时钟修改 (偏移)");
+	lv_label_set_static_text(label_btn5, SYMBOL_CLOCK" 界面时间 (偏移)");
 	lv_obj_align(btn5, line_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 4);
 	lv_btn_set_action(btn5, LV_BTN_ACTION_CLICK, _create_mbox_clock_edit);
 
 	label_txt2 = lv_label_create(sw_h3, NULL);
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
-		"手动更改时钟偏移.\n"
+		"手动设置时间偏移.\n"
 		"#C7EA46 输入的日期和时间将自动转换为偏移量.#\n"
-		"#C7EA46 此变更也会影响FatFS操作.#");
+		"#C7EA46 有关文件系统的操作也会使用这里设置的时间.#");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn5, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1720,7 +1720,7 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 	autoboot_btn = btn;
 
 	lv_obj_t *label_txt2 = lv_label_create(sw_h2, NULL);
-	lv_label_set_static_text(label_txt2, "选择注入时自动启动的\n启动项或者payload.");
+	lv_label_set_static_text(label_txt2, "选择注入时自动启动的\n启动项或payload.");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3 - 4);
 
@@ -1740,7 +1740,7 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_set_top(ddlist, true);
 	lv_ddlist_set_draw_arrow(ddlist, true);
 	lv_ddlist_set_options(ddlist,
-		"无启动标志    \n"
+		"无延迟    \n"
 		"1秒\n"
 		"2秒\n"
 		"3秒\n"
@@ -1763,8 +1763,8 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 	label_txt2 = lv_label_create(l_cont, NULL);
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
-		"设置启用自动启动时显示bootlogo的时间.\n"
-		"#C7EA46 你可以在进入hekate菜单前按# #FF8000 音量-# #C7EA46 .#\n");
+		"启用自动启动时显示bootlogo的时间.\n"
+		"启用自动启动后如要进入hekate引导界面, 请在显示启动logo时按 #FF8000 音量-# 键.\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, label_txt, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1773,14 +1773,14 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 
 	// Create Auto NoGC button.
 	lv_obj_t *btn2 = lv_btn_create(sw_h2, NULL);
-	nyx_create_onoff_button(th, sw_h2, btn2, SYMBOL_CHIP" 自动NoGC", auto_nogc_toggle, true);
+	nyx_create_onoff_button(th, sw_h2, btn2, SYMBOL_CHIP" 禁用游戏卡槽", auto_nogc_toggle, true);
 	lv_obj_align(btn2, line_sep, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 10);
 
 	label_txt2 = lv_label_create(sw_h2, NULL);
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
-		"若固件版本更高, 它会自动检查fuses并应用补丁.\n"
-		"现在它是全局配置, 默认设置为自动."
+		"阻止官方系统对主机内的游戏卡读取控制器进行自动更新.\n"
+		"官方上次更新为14.0.0系统. 此选项默认为自动."
 		"(ON: 自动) \n\n\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn2, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 12);
@@ -1790,13 +1790,13 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 
 	// Create Auto HOS Power Off button.
 	lv_obj_t *btn3 = lv_btn_create(sw_h3, NULL);
-	nyx_create_onoff_button(th, sw_h3, btn3, SYMBOL_POWER" HOS自动关机", auto_hos_poweroff_toggle, true);
+	nyx_create_onoff_button(th, sw_h3, btn3, SYMBOL_POWER" 官方系统自动关机", auto_hos_poweroff_toggle, true);
 	lv_obj_align(btn3, label_sep, LV_ALIGN_OUT_BOTTOM_LEFT, 0, 0);
 
 	label_txt2 = lv_label_create(sw_h3, NULL);
 	lv_label_set_static_text(label_txt2,
-		"在HOS中关机后, 设备将在15秒后唤醒.\n"
-		"启用此选项可在下一次payload注入时自动关闭电源.\n");
+		"在官方系统中选择关机后, 主机将在15秒后自动开机.\n"
+		"此选项启用后下一次注入payload时会自动关机.\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn3, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 12);
 
@@ -1818,7 +1818,7 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_align(slider, label_txt, LV_ALIGN_OUT_RIGHT_MID, LV_DPI * 20 / 15, 0);
 
 	label_txt2 = lv_label_create(sw_h3, NULL);
-	lv_label_set_static_text(label_txt2, "设置背光亮度.\n\n");
+	lv_label_set_static_text(label_txt2, "调整背光亮度.\n\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, label_txt, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1834,7 +1834,7 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
 		"如果启动项使用#FF8000 FSS0#引导, 则会检查reboot 2 payload\n"
-		"二进制文件并强制更新为hekate.\n\n\n\n");
+		"文件并将其更新为hekate.\n\n\n\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn4, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 12);
 

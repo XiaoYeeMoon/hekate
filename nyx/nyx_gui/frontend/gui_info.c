@@ -49,11 +49,11 @@ static lv_res_t _create_window_dump_done(int error, char *dump_filenames)
 	char *txt_buf = (char *)malloc(SZ_4K);
 
 	if (error)
-		s_printf(txt_buf, "#FFDD00 转储到# %s#FFDD00 失败!#\n错误: %d", dump_filenames, error);
+		s_printf(txt_buf, "#FFDD00 提取到# %s#FFDD00 失败!#\n错误: %d", dump_filenames, error);
 	else
 	{
 		char *sn = emmcsn_path_impl(NULL, NULL, NULL, NULL);
-		s_printf(txt_buf, "转储到SD卡完成!\n文件: #C7EA46 backup/%s/dumps/#\n%s", sn, dump_filenames);
+		s_printf(txt_buf, "成功保存到SD卡!\n路径: #C7EA46 backup/%s/dumps/#\n%s", sn, dump_filenames);
 	}
 	lv_mbox_set_text(mbox, txt_buf);
 	free(txt_buf);
@@ -252,7 +252,7 @@ static lv_res_t _create_mbox_cal0(lv_obj_t *btn)
 	lv_obj_set_style(dark_bg, &mbox_darken);
 	lv_obj_set_size(dark_bg, LV_HOR_RES, LV_VER_RES);
 
-	static const char * mbox_btn_map[] = { "\251", "\222转储", "\222关闭", "\251", "" };
+	static const char * mbox_btn_map[] = { "\251", "\222提取", "\222关闭", "\251", "" };
 	lv_obj_t * mbox = lv_mbox_create(dark_bg, NULL);
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 5);
@@ -295,10 +295,10 @@ static lv_res_t _create_mbox_cal0(lv_obj_t *btn)
 		"#FF8000 CAL0版本:#          %d\n"
 		"#FF8000 更新次数:#          %d\n"
 		"#FF8000 序列号:#            %s\n"
-		"#FF8000 WLAN MAC:#          %02X:%02X:%02X:%02X:%02X:%02X\n"
-		"#FF8000 Bluetooth MAC:#     %02X:%02X:%02X:%02X:%02X:%02X\n"
-		"#FF8000 电池LOT:#           %s (%d)\n"
-		"#FF8000 LCD供应商:#         ",
+		"#FF8000 WLAN MAC地址:#      %02X:%02X:%02X:%02X:%02X:%02X\n"
+		"#FF8000 蓝牙MAC地址:#       %02X:%02X:%02X:%02X:%02X:%02X\n"
+		"#FF8000 电池批号:#          %s (%d)\n"
+		"#FF8000 屏幕型号:#          ",
 		cal0->version, cal0->update_cnt, cal0->serial_number,
 		cal0->wlan_mac[0], cal0->wlan_mac[1], cal0->wlan_mac[2], cal0->wlan_mac[3], cal0->wlan_mac[4], cal0->wlan_mac[5],
 		cal0->bd_mac[0], cal0->bd_mac[1], cal0->bd_mac[2], cal0->bd_mac[3], cal0->bd_mac[4], cal0->bd_mac[5],
@@ -354,8 +354,8 @@ static lv_res_t _create_mbox_cal0(lv_obj_t *btn)
 	}
 
 	s_printf(txt_buf + strlen(txt_buf),
-		" (%06X)\n#FF8000 触控供应商:#        %d\n"
-		"#FF8000 IMU类型/安装位置:#  %d / %d\n"
+		" (%06X)\n#FF8000 触控芯片厂商:#      %d\n"
+		"#FF8000 体感芯片类型/方向:# %d / %d\n"
 		"#FF8000 摇杆左/右类型:#     %02X / %02X\n",
 		cal0->lcd_vendor, cal0->touch_ic_vendor_id,
 		cal0->console_6axis_sensor_type, cal0->console_6axis_sensor_mount_type,
@@ -548,8 +548,8 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 {
 	u32 uptime_s = get_tmr_s();
 
-	lv_obj_t *win = nyx_create_standard_window(SYMBOL_CHIP" 硬件和Fuses信息", _action_win_hw_info_status_close);
-	lv_win_add_btn(win, NULL, SYMBOL_DOWNLOAD" 转储fuses信息", _fuse_dump_window_action);
+	lv_obj_t *win = nyx_create_standard_window(SYMBOL_CHIP" 硬件与熔丝信息", _action_win_hw_info_status_close);
+	lv_win_add_btn(win, NULL, SYMBOL_DOWNLOAD" 提取熔丝信息", _fuse_dump_window_action);
 	lv_win_add_btn(win, NULL, SYMBOL_INFO" CAL0信息", _create_mbox_cal0);
 
 	lv_obj_t *desc = lv_cont_create(win, NULL);
@@ -574,17 +574,17 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		"#FF8000 SoC:#\n"
 		"#FF8000 SKU:#\n"
 		"#FF8000 DRAM ID:#\n"
-		"#FF8000 已熔断Fuses (ODM 7/6):#\n"
+		"#FF8000 已熔断熔丝 (ODM 7/6):#\n"
 		"ODM字段 (4/6/7):\n"
 		"安全启动密钥 (SBK):\n"
 		"设备密钥 (DK):\n"
 		"公钥 (PK SHA256):\n\n"
-		"HOS Keygen修订版本:\n"
+		"官方系统 Keygen修订版本:\n"
 		"USB控制器 (BROM):\n"
 		"最终测试修订版本:\n"
-		"芯片探测修订版本:\n"
+		"芯片探针测试版本:\n"
 		"BootROM修订版本:\n\n"
-		"#FF8000 CPU/GPU/SoC Speedo:#\n"
+		"#FF8000 CPU/GPU/SoC 体质分:#\n"
 		"CPU/GPU/SoC IDDQ:\n"
 		"CPU Speedo 1:\n"
 		"SoC Speedo 2:\n\n"
@@ -741,7 +741,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 	switch (burnt_fuses_hos)
 	{
 	case 0:
-		strcpy(fuses_hos_version, "#96FF00 标准样品#");
+		strcpy(fuses_hos_version, "#96FF00 未熔断#");
 		break;
 	case 1:
 		strcpy(fuses_hos_version, "1.0.0");
@@ -813,7 +813,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		strcpy(fuses_hos_version, "22.0.0+");
 		break;
 	case 255:
-		strcpy(fuses_hos_version, "#FFD000 熔丝过烧#");
+		strcpy(fuses_hos_version, "#FFD000 过熔断#");
 		break;
 	default:
 		strcpy(fuses_hos_version, "#FF8000 未知#");
@@ -884,7 +884,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		"%02X - %s - M%d A%02d\n"
 		"%X - %s - %s\n"
 		"%02d - %s\n"
-		"%d | %d - HOS: %s\n"
+		"%d | %d - 官方系统: %s\n"
 		"%08X %08X %08X\n"
 		"%s\n%s\n"
 		"%08X%08X%08X%08X\n"
@@ -901,7 +901,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		"%d\n%d\n%d\n\n"
 		"%dh %02dm %02ds",
 		(chip_id >> 8) & 0xFF, chip_name, chip_major, chip_minor,
-		FUSE(FUSE_SKU_INFO), sku, fuse_read_hw_state() ? "开发版" : "零售版",
+		FUSE(FUSE_SKU_INFO), sku, fuse_read_hw_state() ? "开发机" : "零售机",
 		dram_id, dram_model,
 		burnt_fuses_7, burnt_fuses_6, fuses_hos_version,
 		fuse_read_odm(4), fuse_read_odm(6), fuse_read_odm(7),
@@ -942,7 +942,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 	u32 ranks    = EMC(EMC_ADR_CFG) + 1;
 	u32 channels = (EMC(EMC_FBIO_CFG7) >> 1) & 3;
 	channels = (channels & 1) + ((channels & 2) >> 1);
-	s_printf(txt_buf, "#00DDFF %s SDRAM ##FF8000 (模组0 | 1):#\n#FF8000 供应商:# ", h_cfg.t210b01 ? "LPDDR4X" : "LPDDR4");
+	s_printf(txt_buf, "#00DDFF %s SDRAM ##FF8000 (颗粒0 | 1):#\n#FF8000 厂商:# ", h_cfg.t210b01 ? "LPDDR4X" : "LPDDR4");
 	switch (ram_vendor.chip0.rank0_ch0)
 	{
 	case 1:
@@ -950,7 +950,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		break;
 /*
 	case 5:
-		strcat(txt_buf, "Nanya");
+		strcat(txt_buf, "南亚");
 		break;
 */
 	case 6:
@@ -958,16 +958,16 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		break;
 /*
 	case 8:
-		strcat(txt_buf, "Winbond");
+		strcat(txt_buf, "华邦");
 		break;
 	case 9:
-		strcat(txt_buf, "ESMT");
+		strcat(txt_buf, "晶豪");
 		break;
 	case 19:
-		strcat(txt_buf, "CXMT");
+		strcat(txt_buf, "长鑫");
 		break;
 	case 26:
-		strcat(txt_buf, "Xi'an UniIC");
+		strcat(txt_buf, "紫光");
 		break;
 	case 27:
 		strcat(txt_buf, "ISSI");
@@ -976,10 +976,10 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		strcat(txt_buf, "JSC");
 		break;
 	case 197:
-		strcat(txt_buf, "SINKER");
+		strcat(txt_buf, "神可");
 		break;
 	case 229:
-		strcat(txt_buf, "Dosilicon");
+		strcat(txt_buf, "东芯");
 		break;
 	case 248:
 		strcat(txt_buf, "Fidelix");
@@ -1015,7 +1015,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		break;
 	}
 
-	s_printf(txt_buf + strlen(txt_buf), "\n#FF8000 Rev ID:#  %X.%02X #FF8000 |# %X.%02X\n#FF8000 存储密度:# ",
+	s_printf(txt_buf + strlen(txt_buf), "\n#FF8000 Rev ID:#  %X.%02X #FF8000 |# %X.%02X\n#FF8000 容量:# ",
 		ram_rev0.chip0.rank0_ch0, ram_rev1.chip0.rank0_ch0, ram_rev0.chip1.rank0_ch0, ram_rev1.chip1.rank0_ch0);
 
 	u32 actual_ranks = (ram_vendor.chip0.rank0_ch0 == ram_vendor.chip0.rank1_ch0 &&
@@ -1184,15 +1184,15 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		break;
 
 	case PANEL_OEM_CLONE_6_2:
-		strcat(txt_buf, "#FFDD00 OEM仿制6.2英寸\"#");
+		strcat(txt_buf, "#FFDD00 6.2寸副厂屏\"#");
 		break;
 
 	case PANEL_OEM_CLONE_5_5:
-		strcat(txt_buf, "#FFDD00 OEM仿制5.5英寸\"#");
+		strcat(txt_buf, "#FFDD00 5.5寸副厂屏\"#");
 		break;
 
 	case PANEL_OEM_CLONE:
-		strcat(txt_buf, "#FFDD00 OEM仿制#");
+		strcat(txt_buf, "#FFDD00 未知副厂屏#");
 		break;
 
 	case 0xCCCC:
@@ -1200,7 +1200,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 		break;
 
 	case 0x10000: // Custom ID for LCD OEM Clone for Switch OLED.
-		strcat(txt_buf, "#FFDD00 LCD OEM仿制7英寸\"#");
+		strcat(txt_buf, "#FFDD00 7寸LCD副厂屏\"#");
 		break;
 
 	default:
@@ -1234,7 +1234,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 
 		touch_panel_info_t *touch_panel = touch_get_panel_vendor();
 		if (touch_clone_oled)
-			strcat(txt_buf, "#FFDD00 OEM仿制触控面板#");
+			strcat(txt_buf, "#FFDD00 副厂触摸屏#");
 		else if (touch_panel)
 		{
 			if ((u8)touch_panel->idx == (u8)-2) // Touch panel not found, print gpios.
@@ -1312,7 +1312,7 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 			break;
 
 		case 0xFFFFFFFF: // Custom for OLED clone.
-			strcat(txt_buf, "仿制屏");
+			strcat(txt_buf, "副厂触摸屏");
 			panel_ic_paired = true;
 			break;
 
@@ -1331,9 +1331,9 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 
 	// Check if patched unit.
 	if (!fuse_check_patched_rcm())
-		strcat(txt_buf, "\n\n#96FF00 此设备可利用##96FF00 RCM漏洞!#");
+		strcat(txt_buf, "\n\n#96FF00 此设备未修复RCM漏洞#\n#96FF00 可软破!#");
 	else
-		strcat(txt_buf, "\n\n#FF8000 此设备已修补##FF8000 RCM漏洞!#");
+		strcat(txt_buf, "\n\n#FF8000 此设备已修复RCM漏洞#\n#96FF00 不可软破!#");
 
 	lv_label_set_text(lb_desc2, txt_buf);
 
@@ -1368,7 +1368,7 @@ static void _ipatch_process(u32 offset, u32 value)
 static lv_res_t _create_window_bootrom_info_status(lv_obj_t *btn)
 {
 	lv_obj_t *win = nyx_create_standard_window(SYMBOL_CHIP" BootROM信息", NULL);
-	lv_win_add_btn(win, NULL, SYMBOL_DOWNLOAD" 转储BootROM", _bootrom_dump_window_action);
+	lv_win_add_btn(win, NULL, SYMBOL_DOWNLOAD" 提取BootROM", _bootrom_dump_window_action);
 
 	lv_obj_t *desc = lv_cont_create(win, NULL);
 	lv_obj_set_size(desc, LV_HOR_RES / 2 / 3 * 2, LV_VER_RES - (LV_DPI * 11 / 7) - 5);
@@ -1427,7 +1427,7 @@ static lv_res_t _create_mbox_lockpick(lv_obj_t *btn)
 	lv_mbox_set_recolor_text(mbox, true);
 
 	lv_mbox_set_text(mbox, "#FF8000 Lockpick RCM#\n\n即将启动Lockpick RCM.\n是否继续?\n\n"
-		"想从Lockpick返回请使用\n#96FF00 Reboot to hekate#.");
+		"要返回引导, 请选择\n#96FF00 Reboot to hekate#.");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, _launch_lockpick_action);
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 5);
@@ -1764,7 +1764,7 @@ static lv_res_t _create_mbox_sd_vendor_info(lv_obj_t * btn)
 				test |= buf[i];
 
 			if (test)
-				s_printf(txt_buf2 + strlen(txt_buf2), "\n#FF8000 %08X:# 有数据!", health_rpt_args[i]);
+				s_printf(txt_buf2 + strlen(txt_buf2), "\n#FF8000 %08X:# 存在数据!", health_rpt_args[i]);
 			else
 				s_printf(txt_buf2 + strlen(txt_buf2), "\n#FF8000 %08X:# 无数据", health_rpt_args[i]);
 		}
@@ -1808,7 +1808,7 @@ static lv_res_t _create_mbox_benchmark(bool sd_bench)
 
 	char *txt_buf = (char *)malloc(SZ_16K);
 
-	s_printf(txt_buf, "#FF8000 %s性能测试#\n[RAW读取] 中断: 音量- 和 音量+", sd_bench ? "SD卡" : "eMMC");
+	s_printf(txt_buf, "#FF8000 %s性能测试#\n[RAW读取] 同时按音量-和音量+键取消测试", sd_bench ? "SD卡" : "eMMC");
 
 	lv_mbox_set_text(mbox, txt_buf);
 	txt_buf[0] = 0;
@@ -1938,7 +1938,7 @@ static lv_res_t _create_mbox_benchmark(bool sd_bench)
 
 		// Calculate rate for transfer.
 		u32 rate_1k = (u64)size_bytes_seq * 1000 * 1000 * 1000 / mb_div / timer;
-		s_printf(txt_buf + strlen(txt_buf), " 顺序 16MB - 速率: #C7EA46 %3d.%02d %s#",
+		s_printf(txt_buf + strlen(txt_buf), " 顺序 16MB - 速度: #C7EA46 %3d.%02d %s#",
 			rate_1k / 1000, (rate_1k % 1000) / 10, mbs_text);
 		lv_label_set_text(lbl_status, txt_buf);
 		lv_obj_align(lbl_status, NULL, LV_ALIGN_CENTER, 0, 0);
@@ -2001,7 +2001,7 @@ static lv_res_t _create_mbox_benchmark(bool sd_bench)
 		rate_1k = (u64)size_bytes_4kb * 1000 * 1000 * 1000 / mb_div / timer;
 		u32 iops = ((u64)(sct_rem_4kb / sct_num_1mb) * 1024 * 1000 * 1000 * 1000) / (4096 / 1024) / timer / 1000;
 		s_printf(txt_buf + strlen(txt_buf), "       平均 #C7EA46 95th#  #FF3C28 5th#\n");
-		s_printf(txt_buf + strlen(txt_buf), " 顺序  4KB - 速率: #C7EA46 %3d.%02d %s# IOPS: #C7EA46 %4d# %4d %4d \n",
+		s_printf(txt_buf + strlen(txt_buf), " 顺序  4KB - 速度: #C7EA46 %3d.%02d %s# IOPS: #C7EA46 %4d# %4d %4d \n",
 			rate_1k / 1000, (rate_1k % 1000) / 10, mbs_text, iops, 1000000 / pct95, 1000000 / pct05);
 		lv_label_set_text(lbl_status, txt_buf);
 		lv_obj_align(lbl_status, NULL, LV_ALIGN_CENTER, 0, 0);
@@ -2075,7 +2075,7 @@ static lv_res_t _create_mbox_benchmark(bool sd_bench)
 		// Calculate rate and IOPS for transfer.
 		rate_1k = (u64)size_bytes_4kb * 1000 * 1000 * 1000 / mb_div / timer;
 		iops = ((u64)(sct_rem_4kb / sct_num_1mb) * 1024 * 1000 * 1000 * 1000) / (4096 / 1024) / timer / 1000;
-		s_printf(txt_buf + strlen(txt_buf), " 随机  4KB - 速率: #C7EA46 %3d.%02d %s# IOPS: #C7EA46 %4d# %4d %4d \n",
+		s_printf(txt_buf + strlen(txt_buf), " 随机  4KB - 速度: #C7EA46 %3d.%02d %s# IOPS: #C7EA46 %4d# %4d %4d \n",
 			rate_1k / 1000, (rate_1k % 1000) / 10, mbs_text, iops, 1000000 / pct95, 1000000 / pct05);
 		if (iter_curr == iters - 1)
 			txt_buf[strlen(txt_buf) - 1] = 0; // Cut off last new line.
@@ -2092,7 +2092,7 @@ error:
 	if (error)
 	{
 		if (error == -1)
-			s_printf(txt_buf + strlen(txt_buf), "\n\n#FFDD00                        中断!                      #");
+			s_printf(txt_buf + strlen(txt_buf), "\n\n#FFDD00                      已取消!                      #");
 		else
 			s_printf(txt_buf + strlen(txt_buf), "\n\n#FFDD00                     发生IO错误!                   #");
 
@@ -2202,7 +2202,7 @@ static lv_res_t _create_window_emmc_info_status(lv_obj_t *btn)
 		lv_win_add_btn(win, NULL, SYMBOL_FILE_ALT" 设备报告", _create_mbox_emmc_sandisk_report);
 		break;
 	case 0x89: // Unofficial.
-		strcat(txt_buf, "慧荣科技 ");
+		strcat(txt_buf, "慧荣 ");
 		break;
 	case 0x90:
 		strcat(txt_buf, "SK海力士 ");
@@ -2258,7 +2258,7 @@ static lv_res_t _create_window_emmc_info_status(lv_obj_t *btn)
 			strcat(bkops, "轻微");
 			break;
 		case 2:
-			strcat(bkops, "#FFDD00 性能下降#");
+			strcat(bkops, "#FFDD00 下降#");
 			break;
 		case 3:
 			strcat(bkops, "#FFDD00 严重#");
@@ -2315,16 +2315,16 @@ static lv_res_t _create_window_emmc_info_status(lv_obj_t *btn)
 		"型号:\n"
 		"产品版本:\n"
 		"序列号:\n"
-		"月份/年份:\n\n"
-		"#00DDFF Ext CSD:#\n"
+		"生产月/年:\n\n"
+		"#00DDFF 扩展数据:#\n"
 		"命令类别:\n"
 		"最大速率:\n"
 		"当前速率:\n"
 		"增强区域:\n"
 		"写缓存:\n\n"
-		"维护:\n"
-		"预计寿命:\n"
-		"已用保留空间:"
+		"后台维护:\n"
+		"剩余寿命:\n"
+		"已用备用空间:"
 	);
 	lv_obj_set_width(lb_desc, lv_obj_get_width(desc));
 
@@ -2351,7 +2351,7 @@ static lv_res_t _create_window_emmc_info_status(lv_obj_t *btn)
 	s_printf(txt_buf + strlen(txt_buf), "2: #96FF00 BOOT1#  大小: %6d KiB  扇区: 0x%08X\n", boot_size / 1024, boot_size / EMMC_BLOCKSIZE);
 	s_printf(txt_buf + strlen(txt_buf), "3: #96FF00 RPMB#   大小: %6d KiB  扇区: 0x%08X\n", rpmb_size / 1024, rpmb_size / EMMC_BLOCKSIZE);
 	s_printf(txt_buf + strlen(txt_buf), "0: #96FF00 GPP#    大小: %6d MiB  扇区: 0x%08X\n", emmc_storage.sec_cnt >> SECTORS_TO_MIB_COEFF, emmc_storage.sec_cnt);
-	strcat(txt_buf, "\n#00DDFF GPP (eMMC USER) 分区表:#\n");
+	strcat(txt_buf, "\n#00DDFF GPP (eMMC USER) 分区:#\n");
 
 	emmc_set_partition(EMMC_GPP);
 	LIST_INIT(gpt);
@@ -2365,7 +2365,7 @@ static lv_res_t _create_window_emmc_info_status(lv_obj_t *btn)
 		int lines = strlen(part->name) > 25 ? 2 : 1;
 		if ((lines_left - lines) <= 0)
 		{
-			strcat(txt_buf, "#FFDD00 分区表无法完全显示在屏幕上...#");
+			strcat(txt_buf, "#FFDD00 分区表无法完全显示...#");
 			break;
 		}
 
@@ -2411,9 +2411,9 @@ out_error:
 
 		s_printf(txt_buf,
 			"#FF8000 eMMC问题警告#\n\n"
-			"#FFDD00 你的eMMC以较慢模式初始化,#\n"
-			"#FFDD00 或发生初始化/读取/写入错误!#\n"
-			"#FFDD00 可能是硬件问题!#\n\n"
+			"#FFDD00 eMMC以慢速模式初始化,#\n"
+			"#FFDD00 或发生了初始化/读取/写入错误!#\n"
+			"#FFDD00 这可能是硬件问题!#\n\n"
 			"#00DDFF 总线速度:# %d MB/s\n\n"
 			"#00DDFF SDMMC4错误:#\n"
 			"初始化失败数: %d\n"
@@ -2465,12 +2465,12 @@ static lv_res_t _create_window_sdcard_info_status(lv_obj_t *btn)
 	}
 
 	lv_label_set_text(lb_desc,
-		"#00DDFF 卡ID#\n"
-		"供应商ID:\n"
+		"#00DDFF CID#\n"
+		"厂商:\n"
 		"型号:\n"
 		"OEM ID:\n"
-		"HW版本:\n"
-		"FW版本:\n"
+		"硬件版本:\n"
+		"固件版本:\n"
 		"序列号:\n"
 		"生产月/年:\n\n"
 		"最大功率:\n"
@@ -2489,7 +2489,7 @@ static lv_res_t _create_window_sdcard_info_status(lv_obj_t *btn)
 	switch (sd_storage.cid.manfid)
 	{
 	case 0x00:
-		strcat(txt_buf, "#FFDD00 仿冒# ");
+		strcat(txt_buf, "#FFDD00 假卡# ");
 		break;
 	case 0x01:
 		strcat(txt_buf, "松下 ");
@@ -2513,7 +2513,7 @@ static lv_res_t _create_window_sdcard_info_status(lv_obj_t *btn)
 		strcat(txt_buf, "胜创 ");
 		break;
 	case 0x19:
-		strcat(txt_buf, "新东亚 ");
+		strcat(txt_buf, "蓝摩 ");
 		break;
 	case 0x1A:
 		strcat(txt_buf, "劲永 ");
@@ -2525,7 +2525,7 @@ static lv_res_t _create_window_sdcard_info_status(lv_obj_t *btn)
 		strcat(txt_buf, "威刚 ");
 		break;
 	case 0x22:
-		strcat(txt_buf, "Kowin"); // #E: Digiera.
+		strcat(txt_buf, "康盈"); // #E: Digiera.
 		break;
 	case 0x27:
 		strcat(txt_buf, "群联 ");
@@ -2652,7 +2652,7 @@ static lv_res_t _create_window_sdcard_info_status(lv_obj_t *btn)
 	lv_obj_t * lb_desc2 = lv_label_create(desc2, lb_desc);
 
 	lv_label_set_static_text(lb_desc2,
-		"#00DDFF 卡特定数据#\n"
+		"#00DDFF CSD寄存器#\n"
 		"命令类别:\n"
 		"容量:\n"
 		"容量 (LBA):\n"
@@ -2676,7 +2676,7 @@ static lv_res_t _create_window_sdcard_info_status(lv_obj_t *btn)
 	switch (sd_storage.csd.write_protect)
 	{
 	case 0:
-		wp_info = "未启用";
+		wp_info = "无";
 		break;
 	case 1:
 		wp_info = "临时";
@@ -2814,7 +2814,7 @@ static lv_res_t _create_window_sdcard_info_status(lv_obj_t *btn)
 	lv_obj_set_width(lb_desc4, lv_obj_get_width(desc4));
 
 	lv_label_set_text(lb_desc4,
-		"#00DDFF SDMMC1错误:#\n"
+		"#00DDFF SDMMC1错误计数:#\n"
 		"初始化失败:\n"
 		"读/写失败:\n"
 		"读/写错误:"
@@ -2845,7 +2845,7 @@ static lv_res_t _create_window_sdcard_info_status(lv_obj_t *btn)
 	f_getfree("", &sd_fs.free_clst, NULL);
 
 	lv_label_set_text(lb_desc3,
-		"#00DDFF 检测到FAT系统:#\n"
+		"#00DDFF 文件系统信息:#\n"
 		"文件系统:\n"
 		"簇大小:\n"
 		"可用/总空间:"
@@ -2876,7 +2876,7 @@ failed:
 static lv_res_t _create_window_battery_status(lv_obj_t *btn)
 {
 	lv_obj_t *win = nyx_create_standard_window(SYMBOL_BATTERY_FULL" 电池信息", NULL);
-	lv_win_add_btn(win, NULL, SYMBOL_DOWNLOAD" 转储电量计寄存器", _battery_dump_window_action);
+	lv_win_add_btn(win, NULL, SYMBOL_DOWNLOAD" 提取电量计寄存器", _battery_dump_window_action);
 
 	lv_obj_t *desc = lv_cont_create(win, NULL);
 	lv_obj_set_size(desc, LV_HOR_RES / 2 / 4 * 2, LV_VER_RES - (LV_DPI * 11 / 7) - 5);
@@ -2888,7 +2888,7 @@ static lv_res_t _create_window_battery_status(lv_obj_t *btn)
 	lv_label_set_static_text(lb_desc,
 		"#00DDFF 电量计IC信息:#\n"
 		"当前容量:\n"
-		"满充容量:\n"
+		"满电容量:\n"
 		"设计容量:\n"
 		"当前电流:\n"
 		"平均电流:\n"
@@ -2898,7 +2898,7 @@ static lv_res_t _create_window_battery_status(lv_obj_t *btn)
 		"历史最高电压:\n"
 		"空电电压:\n"
 		"电池温度:\n\n"
-		"#00DDFF PMIC IC信息:#\n"
+		"#00DDFF PMIC信息:#\n"
 		"主PMIC:\n\n"
 		"CPU/GPU PMIC:\n"
 	);
@@ -3012,7 +3012,7 @@ static lv_res_t _create_window_battery_status(lv_obj_t *btn)
 		"#00DDFF USB-PD IC信息:#\n"
 		"连接状态:\n"
 		"输入功率限制:\n"
-		"USB-PD配置文件:"
+		"USB-PD档位:"
 	);
 	lv_obj_set_width(lb_desc2, lv_obj_get_width(desc2));
 	lv_obj_align(desc2, val, LV_ALIGN_OUT_RIGHT_MID, LV_DPI / 2, 0);
@@ -3074,7 +3074,7 @@ static lv_res_t _create_window_battery_status(lv_obj_t *btn)
 			strcat(txt_buf, "#FF8000 冰冷#");
 			break;
 		case 6:
-			strcat(txt_buf, "#FF8000 炎热#");
+			strcat(txt_buf, "#FF8000 过热#");
 			break;
 		default:
 			s_printf(txt_buf + strlen(txt_buf), "未知 (%d)", value);
@@ -3093,7 +3093,7 @@ static lv_res_t _create_window_battery_status(lv_obj_t *btn)
 		u32 wattage = 0;
 		usb_pd_objects_t usb_pd;
 		bm92t36_get_source_info(&inserted, &usb_pd);
-		strcat(txt_buf, inserted ? "已连接" : "已断开");
+		strcat(txt_buf, inserted ? "连接" : "断开");
 
 		// Select 5V is no PD contract.
 		wattage = iinlim * (usb_pd.pdo_no ? usb_pd.selected_pdo.voltage : 5);
@@ -3190,7 +3190,7 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	lv_label_set_static_text(label_sep, "");
 
 	lv_obj_t *label_txt = lv_label_create(h1, NULL);
-	lv_label_set_static_text(label_txt, "SoC和硬件信息");
+	lv_label_set_static_text(label_txt, "SoC与硬件信息");
 	lv_obj_set_style(label_txt, th->label.prim);
 	lv_obj_align(label_txt, label_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, 0);
 
@@ -3231,15 +3231,15 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	if (lockpick_found)
 	{
 		lv_label_set_static_text(label_txt2,
-			"查看Ipatches, 并转储未打补丁和已打补丁版本的BootROM.\n"
-			"或者通过#C7EA46 Lockpick RCM#转储每个密钥.\n\n");
+			"查看Ipatches以及提取BootROM.\n"
+			"也可通过 #C7EA46 Lockpick RCM# 提取密钥.\n\n");
 	}
 	else
 	{
 		lv_label_set_static_text(label_txt2,
-			"查看Ipatches, 并转储未打补丁和已打补丁版本的BootROM.\n"
-			"或者通过#C7EA46 Lockpick RCM#转储每个密钥.\n"
-			"#FFDD00 bootloader/payloads/Lockpick_RCM.bin文件丢失或版本过旧!#\n");
+			"查看Ipatches以及提取BootROM.\n"
+			"也可通过 #C7EA46 Lockpick RCM# 提取密钥.\n"
+			"#FFDD00 bootloader/payloads/Lockpick_RCM.bin文件不存在或版本过旧!#\n");
 	}
 
 	lv_obj_set_style(label_txt2, &hint_small_style);
@@ -3257,7 +3257,7 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_t *btn3 = lv_btn_create(h1, btn);
 	label_btn = lv_label_create(btn3, NULL);
 	lv_btn_set_fit(btn3, true, true);
-	lv_label_set_static_text(label_btn, SYMBOL_CIRCUIT"  硬件和Fuses");
+	lv_label_set_static_text(label_btn, SYMBOL_CIRCUIT"  硬件与熔丝");
 	lv_obj_align(btn3, line_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 2);
 	lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, _create_window_hw_info_status);
 
@@ -3271,9 +3271,9 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_t *label_txt4 = lv_label_create(h1, NULL);
 	lv_label_set_recolor(label_txt4, true);
 	lv_label_set_static_text(label_txt4,
-		"查看和提取缓存的 #C7EA46 Fuses# 和 #C7EA46 KFuses# 信息.\n"
-		"Fuses包含了SoC/SKU和KFuses HDCP的密钥信息.\n"
-		"你也可以查看#C7EA46 DRAM#, #C7EA46 屏幕# 和 #C7EA46 触摸面板#的信息.");
+		"查看和提取 #C7EA46 熔丝# 和 #C7EA46 KFuses# 信息.\n"
+		"熔丝包含SoC/SKU和KFuses HDCP密钥信息.\n"
+		"也可看到 #C7EA46 内存颗粒#, #C7EA46 屏幕# 以及 #C7EA46 触摸面板# 的信息.");
 	lv_obj_set_style(label_txt4, &hint_small_style);
 	lv_obj_align(label_txt4, btn3, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 
@@ -3321,8 +3321,8 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_t *label_txt5 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt5, true);
 	lv_label_set_static_text(label_txt5,
-		"查看有关eMMC或microSD及其分区列表的信息.\n"
-		"此外, 您可以对读取速度进行基准测试.");
+		"查看有关eMMC或microSD及其分区表的信息.\n"
+		"还可以测试读取速度.");
 	lv_obj_set_style(label_txt5, &hint_small_style);
 	lv_obj_align(label_txt5, btn5, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 
@@ -3346,8 +3346,8 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_t *label_txt6 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt6, true);
 	lv_label_set_static_text(label_txt6,
-		"查看电池和电池充电器相关信息.\n"
-		"此外, 您可以转储电池充电器的寄存器信息.\n");
+		"查看电池和电池充电器的相关信息.\n"
+		"还可以提取电池充电芯片的寄存器信息.\n");
 	lv_obj_set_style(label_txt6, &hint_small_style);
 	lv_obj_align(label_txt6, btn7, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 }

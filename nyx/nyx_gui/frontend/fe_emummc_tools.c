@@ -166,7 +166,7 @@ static int _dump_emummc_file_part(emmc_tool_gui_t *gui, char *sd_path, sdmmc_sto
 	// Check if the USER partition or the RAW eMMC fits the sd card free space.
 	if (totalSectors > (sd_fs.free_clst * sd_fs.csize))
 	{
-		s_printf(gui->txt_buf, "\n#FFDD00 文件式emuMMC空间不足!#\n");
+		s_printf(gui->txt_buf, "\n#FFDD00 文件式虚拟系统空间不足!#\n");
 		lv_label_ins_text(gui->label_log, LV_LABEL_POS_LAST, gui->txt_buf);
 		manual_system_maintenance(true);
 
@@ -254,7 +254,7 @@ static int _dump_emummc_file_part(emmc_tool_gui_t *gui, char *sd_path, sdmmc_sto
 		// Check for cancellation combo.
 		if (btn_read_vol() == (BTN_VOL_UP | BTN_VOL_DOWN))
 		{
-			s_printf(gui->txt_buf, "\n#FFDD00 emuMMC已取消!#\n");
+			s_printf(gui->txt_buf, "\n#FFDD00 已取消创建虚拟系统!#\n");
 			lv_label_ins_text(gui->label_log, LV_LABEL_POS_LAST, gui->txt_buf);
 			manual_system_maintenance(true);
 
@@ -539,7 +539,7 @@ static int _dump_emummc_raw_part(emmc_tool_gui_t *gui, int active_part, int part
 		emmc_part_t *user_part = emmc_part_find(&gpt_parsed, "USER");
 		if (!user_part)
 		{
-			s_printf(gui->txt_buf, "\n#FFDD00 未找到用户分区!#\n");
+			s_printf(gui->txt_buf, "\n#FFDD00 未找到USER分区!#\n");
 			lv_label_ins_text(gui->label_log, LV_LABEL_POS_LAST, gui->txt_buf);
 			manual_system_maintenance(true);
 
@@ -557,7 +557,7 @@ static int _dump_emummc_raw_part(emmc_tool_gui_t *gui, int active_part, int part
 		// Check for cancellation combo.
 		if (btn_read_vol() == (BTN_VOL_UP | BTN_VOL_DOWN))
 		{
-			s_printf(gui->txt_buf, "\n#FFDD00 emuMMC创建已取消!#\n");
+			s_printf(gui->txt_buf, "\n#FFDD00 已取消创建虚拟分区!#\n");
 			lv_label_ins_text(gui->label_log, LV_LABEL_POS_LAST, gui->txt_buf);
 			manual_system_maintenance(true);
 

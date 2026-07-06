@@ -57,9 +57,9 @@ static void _create_window_emummc()
 
 	lv_obj_t *win;
 	if (!mbr_ctx.part_idx)
-		win = nyx_create_standard_window(SYMBOL_DRIVE"  创建SD文件式emuMMC", _action_emummc_window_close);
+		win = nyx_create_standard_window(SYMBOL_DRIVE"  创建文件式虚拟系统", _action_emummc_window_close);
 	else
-		win = nyx_create_standard_window(SYMBOL_DRIVE"  创建SD分区式emuMMC", _action_emummc_window_close);
+		win = nyx_create_standard_window(SYMBOL_DRIVE"  创建分区式虚拟系统", _action_emummc_window_close);
 
 	//Disable buttons.
 	nyx_window_toggle_buttons(win, true);
@@ -202,7 +202,7 @@ static void _create_mbox_emummc_raw()
 	lv_obj_set_size(dark_bg, LV_HOR_RES, LV_VER_RES);
 
 	static const char *mbox_btn_format[] = { "\222继续", "\222取消", "" };
-	static char *mbox_btn_parts[] = { "\262第1部分", "\262第2部分", "\262第3部分", "\222取消", "" };
+	static char *mbox_btn_parts[] = { "\262分区1", "\262分区2", "\262分区3", "\222取消", "" };
 	lv_obj_t * mbox = lv_mbox_create(dark_bg, NULL);
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 6);
@@ -261,10 +261,10 @@ static void _create_mbox_emummc_raw()
 
 	s_printf(txt_buf + strlen(txt_buf),
 		"分区表:\n"
-		"#C0C0C0 第0部分: 类型: %02x, 起始: %08x, 大小: %08x#\n"
-		"#%s第1部分: 类型: %02x, 起始: %08x, 大小: %08x#\n"
-		"#%s第2部分: 类型: %02x, 起始: %08x, 大小: %08x#\n"
-		"#%s第3部分: 类型: %02x, 起始: %08x, 大小: %08x#",
+		"#C0C0C0 分区0: 类型: %02x, 起始: %08x, 大小: %08x#\n"
+		"#%s分区1: 类型: %02x, 起始: %08x, 大小: %08x#\n"
+		"#%s分区2: 类型: %02x, 起始: %08x, 大小: %08x#\n"
+		"#%s分区3: 类型: %02x, 起始: %08x, 大小: %08x#",
 		mbr->partitions[0].type, mbr->partitions[0].start_sct, mbr->partitions[0].size_sct,
 		(mbr_ctx.available & BIT(0)) ? (mbr_ctx.resized_cnt[0] ? "FFDD00" : "C7EA46") : "C0C0C0",
 		 mbr->partitions[1].type, mbr->partitions[1].start_sct, mbr->partitions[1].size_sct,
@@ -274,11 +274,11 @@ static void _create_mbox_emummc_raw()
 		 mbr->partitions[3].type, mbr->partitions[3].start_sct, mbr->partitions[3].size_sct);
 
 	if (mbr_ctx.resized_cnt[0] || mbr_ctx.resized_cnt[1] || mbr_ctx.resized_cnt[2])
-		strcat(txt_buf, "\n\n#FFDD00 注意:# 黄色条目表示USER分区已调整大小.");
+		strcat(txt_buf, "\n\n#FFDD00 注意:# 黄色表示USER分区的大小被调整.");
 
 	if (!mbr_ctx.available)
-		strcat(txt_buf, "\n#FF8000 您想要对SD卡进行分区吗?#\n"
-						  "#FF8000  (接下来需要选择处理方式) #");
+		strcat(txt_buf, "\n#FF8000 要对SD卡进行分区吗?#\n"
+						  "#FF8000  (接下来需选择处理方式) #");
 
 	lv_mbox_set_text(mbox, txt_buf);
 	free(txt_buf);
@@ -342,16 +342,16 @@ static lv_res_t _create_mbox_emummc_create(lv_obj_t *btn)
 	lv_obj_set_style(dark_bg, &mbox_darken);
 	lv_obj_set_size(dark_bg, LV_HOR_RES, LV_VER_RES);
 
-	static const char * mbox_btn_map[] = { "\222SD卡文件", "\222SD卡分区", "\222取消", "" };
+	static const char * mbox_btn_map[] = { "\222文件式", "\222分区式", "\222取消", "" };
 	lv_obj_t * mbox = lv_mbox_create(dark_bg, NULL);
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 6);
 
 	lv_mbox_set_text(mbox,
-		"欢迎使用#C7EA46 emuMMC#创建工具!\n\n"
-		"请选择要创建的emuMMC类型.\n"
-		"#FF8000 SD卡文件# 以文件形式保存在FAT分区中.\n"
-		"#FF8000 SD卡分区# 以RAW镜像方式保存在可用分区中.");
+		"欢迎使用#C7EA46 虚拟系统#创建工具!\n\n"
+		"请选择虚拟系统类型.\n"
+		"#FF8000 文件式虚拟系统# 以文件形式保存在SD卡上.\n"
+		"#FF8000 分区式虚拟系统# 以RAW镜像方式保存在一个单独分区内.");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, _create_emummc_action);
 
@@ -393,8 +393,8 @@ static void _create_emummc_migrated_mbox()
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 4);
 
 	lv_mbox_set_text(mbox,
-		"#FF8000 emuMMC配置#\n\n"
-		"#96FF00 emuMMC配置#\n#96FF00 已保存到SD卡!#");
+		"#FF8000 虚拟系统配置#\n\n"
+		"#96FF00 虚拟系统配置#\n#96FF00 已保存到SD卡!#");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, _save_emummc_cfg_mig_mbox_action);
 
@@ -579,23 +579,23 @@ static lv_res_t _create_emummc_migrate_action(lv_obj_t * btns, const char * txt)
 		if (!emummc_backup)
 			s_printf(txt_buf,
 				"#C7EA46 检测到可迁移的eMMC备份!#\n\n"
-				"#FF8000 您想要迁移它吗?#\n");
+				"#FF8000 是否迁移?#\n");
 		else
 			s_printf(txt_buf,
-				"#C7EA46 检测到可迁移的emuMMC备份!#\n\n"
-				"#FF8000 您想要迁移它吗?#\n");
+				"#C7EA46 检测到可迁移的虚拟系统备份!#\n\n"
+				"#FF8000 是否迁移?#\n");
 		lv_mbox_add_btns(mbox, mbox_btn_map, _create_emummc_mig1_action);
 	}
 	else if (emummc)
 	{
 		s_printf(txt_buf,
-			"#C7EA46 检测到SD卡分区式emuMMC!#\n\n"
-			"#FF8000 您想修复它的配置和分区类型吗?#\n");
+			"#C7EA46 检测到分区式虚拟系统!#\n\n"
+			"#FF8000 是否要修复配置和分区类型?#\n");
 		lv_mbox_add_btns(mbox, mbox_btn_map, _create_emummc_mig0_action);
 	}
 	else
 	{
-		s_printf(txt_buf, "未检测到emuMMC!\n");
+		s_printf(txt_buf, "未检测到虚拟系统!\n");
 		lv_mbox_add_btns(mbox, mbox_btn_map1, nyx_mbox_action);
 	}
 
@@ -626,15 +626,15 @@ static lv_res_t _create_mbox_emummc_migrate(lv_obj_t *btn)
 	lv_obj_set_style(dark_bg, &mbox_darken);
 	lv_obj_set_size(dark_bg, LV_HOR_RES, LV_VER_RES);
 
-	static char *mbox_btn_map[] = { "\262备份", "\262修复RAW分区", "\222取消", "" };
+	static char *mbox_btn_map[] = { "\262备份", "\262修复分区", "\222取消", "" };
 	lv_obj_t * mbox = lv_mbox_create(dark_bg, NULL);
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 6);
 
 	lv_mbox_set_text(mbox,
-		"欢迎使用#C7EA46 emuMMC#迁移工具!\n\n"
+		"欢迎使用#C7EA46 虚拟系统#迁移工具!\n\n"
 		"请选择要执行的迁移类型.\n"
-		"未检测到对应内容的选项将被禁用.");
+		"未检测到对应内容的选项无法点击.");
 
 	char *path_buf = (char *)malloc(0x512);
 	mbr_t *mbr = (mbr_t *)malloc(sizeof(mbr_t));
@@ -770,8 +770,8 @@ static void _create_emummc_saved_mbox()
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 4);
 
 	lv_mbox_set_text(mbox,
-		"#FF8000 emuMMC配置#\n\n"
-		"#96FF00 emuMMC配置#\n#96FF00 已存入SD卡!#");
+		"#FF8000 虚拟系统配置#\n\n"
+		"#96FF00 虚拟系统配置#\n#96FF00 已保存到SD卡!#");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, _save_emummc_cfg_mbox_action);
 
@@ -829,7 +829,7 @@ static lv_res_t _action_win_change_emummc_close(lv_obj_t *btn)
 
 static lv_res_t _create_change_emummc_window(lv_obj_t *btn_caller)
 {
-	lv_obj_t *win = nyx_create_standard_window(SYMBOL_SETTINGS"  修改emuMMC", _action_win_change_emummc_close);
+	lv_obj_t *win = nyx_create_standard_window(SYMBOL_SETTINGS"  切换虚拟系统", _action_win_change_emummc_close);
 	lv_win_add_btn(win, NULL, SYMBOL_POWER"  停用", _save_disable_emummc_cfg_action);
 
 	sd_mount();
@@ -1050,7 +1050,7 @@ out1:
 
 lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 {
-	lv_obj_t *win = nyx_create_standard_window(SYMBOL_EDIT"  emuMMC管理", NULL);
+	lv_obj_t *win = nyx_create_standard_window(SYMBOL_EDIT"  虚拟系统管理", NULL);
 
 	// Set resources to be managed by other windows.
 	emummc_manage_window = win;
@@ -1081,7 +1081,7 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	lv_label_set_static_text(label_sep, "");
 
 	lv_obj_t *label_txt = lv_label_create(h1, NULL);
-	lv_label_set_static_text(label_txt, "emuMMC信息和选择");
+	lv_label_set_static_text(label_txt, "虚拟系统信息和选择");
 	lv_obj_set_style(label_txt, lv_theme_get_current()->label.prim);
 	lv_obj_align(label_txt, label_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 11);
 
@@ -1094,7 +1094,7 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	// Create emuMMC info labels.
 	lv_obj_t *label_btn = lv_label_create(h1, NULL);
 	lv_label_set_recolor(label_btn, true);
-	lv_label_set_static_text(label_btn, emu_info.enabled ? "#96FF00 "SYMBOL_OK"  开!#" : "#FF8000 "SYMBOL_CLOSE"  关!#");
+	lv_label_set_static_text(label_btn, emu_info.enabled ? "#96FF00 "SYMBOL_OK"  启用!#" : "#FF8000 "SYMBOL_CLOSE"  关闭!#");
 	lv_obj_align(label_btn, line_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 4);
 
 	lv_obj_t *label_txt2 = lv_label_create(h1, NULL);
@@ -1104,17 +1104,17 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	if (emu_info.enabled)
 	{
 		if (emu_info.sector)
-			s_printf(txt_buf, "#00DDFF 类型:# SD RAW分区\n#00DDFF 扇区:# 0x%08X\n#00DDFF Nintendo文件夹:# %s\n",
+			s_printf(txt_buf, "#00DDFF 类型:# 分区式\n#00DDFF 扇区:# 0x%08X\n#00DDFF Nintendo文件夹:# %s\n",
 				emu_info.sector, emu_info.nintendo_path ? emu_info.nintendo_path : "");
 		else
-			s_printf(txt_buf, "#00DDFF 类型:# SD文件\n#00DDFF 基础文件夹:# %s\n#00DDFF Nintendo文件夹:# %s\n",
+			s_printf(txt_buf, "#00DDFF 类型:# 文件式\n#00DDFF 主文件夹:# %s\n#00DDFF Nintendo文件夹:# %s\n",
 				emu_info.path ? emu_info.path : "", emu_info.nintendo_path ? emu_info.nintendo_path : "");
 
 		lv_label_set_text(label_txt2, txt_buf);
 	}
 	else
 	{
-		lv_label_set_static_text(label_txt2, "emuMMC已禁用, 将使用eMMC进行引导.\n\n\n");
+		lv_label_set_static_text(label_txt2, "虚拟系统已禁用, 将使用eMMC启动.\n\n\n");
 	}
 
 	if (emu_info.path)
@@ -1130,15 +1130,15 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	lv_obj_t *btn2 = lv_btn_create(h1, NULL);
 	lv_btn_set_fit(btn2, true, true);
 	label_btn = lv_label_create(btn2, NULL);
-	lv_label_set_static_text(label_btn, SYMBOL_SETTINGS"  修改emuMMC");
+	lv_label_set_static_text(label_btn, SYMBOL_SETTINGS"  切换虚拟系统");
 	lv_obj_align(btn2, label_txt2, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI * 6 / 10);
 	lv_btn_set_action(btn2, LV_BTN_ACTION_CLICK, _create_change_emummc_window);
 
 	label_txt2 = lv_label_create(h1, NULL);
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
-		"选择在emuMMC文件夹或SD卡分区中创建系统镜像.\n"
-		"您最多可以拥有3个基于分区的系统镜像和无数个基于文件的系统镜像.\n");
+		"切换要启动的文件式或分区式虚拟系统.\n"
+		"分区式虚拟系统最多可创建3个, 文件式虚拟系统可创建无限个.\n");
 
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn2, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
@@ -1156,7 +1156,7 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	lv_label_set_static_text(label_sep, "");
 
 	lv_obj_t *label_txt3 = lv_label_create(h2, NULL);
-	lv_label_set_static_text(label_txt3, "emuMMC工具");
+	lv_label_set_static_text(label_txt3, "虚拟系统工具");
 	lv_obj_set_style(label_txt3, lv_theme_get_current()->label.prim);
 	lv_obj_align(label_txt3, label_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 5);
 
@@ -1167,15 +1167,15 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	lv_obj_t *btn3 = lv_btn_create(h2, btn2);
 	label_btn = lv_label_create(btn3, NULL);
 	lv_btn_set_fit(btn3, true, true);
-	lv_label_set_static_text(label_btn, SYMBOL_DRIVE"  创建emuMMC");
+	lv_label_set_static_text(label_btn, SYMBOL_DRIVE"  创建虚拟系统");
 	lv_obj_align(btn3, line_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 4);
 	lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, _create_mbox_emummc_create);
 
 	lv_obj_t *label_txt4 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt4, true);
 	lv_label_set_static_text(label_txt4,
-		"允许您创建新的 #C7EA46 SD卡文件# 或 #C7EA46 SD卡RAW分区# emuMMC.\n"
-		"您可以从eMMC或eMMC备份创建它.\n");
+		"创建一个新的 #C7EA46 文件式# 或 #C7EA46 分区式# 虚拟系统.\n"
+		"支持从现有eMMC或eMMC备份创建.\n");
 
 	lv_obj_set_style(label_txt4, &hint_small_style);
 	lv_obj_align(label_txt4, btn3, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
@@ -1183,7 +1183,7 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	// Create Migrate emuMMC button.
 	lv_obj_t *btn4 = lv_btn_create(h2, btn2);
 	label_btn = lv_label_create(btn4, NULL);
-	lv_label_set_static_text(label_btn, SYMBOL_SHUFFLE"  emuMMC迁移");
+	lv_label_set_static_text(label_btn, SYMBOL_SHUFFLE"  虚拟系统迁移");
 	lv_obj_align(btn4, label_txt4, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 2);
 	lv_btn_set_action(btn4, LV_BTN_ACTION_CLICK, NULL);
 	lv_btn_set_action(btn4, LV_BTN_ACTION_CLICK, _create_mbox_emummc_migrate);
@@ -1191,7 +1191,7 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	label_txt4 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt4, true);
 	lv_label_set_static_text(label_txt4,
-		"将备份迁移至 #C7EA46 SD卡文件emuMMC# 或修复现有的\n#C7EA46 SD卡RAW分区emuMMC#.\n");
+		"将备份迁移至 #C7EA46 文件式虚拟系统# 或修复现有的\n#C7EA46 分区式虚拟系统#.\n");
 	lv_obj_set_style(label_txt4, &hint_small_style);
 	lv_obj_align(label_txt4, btn4, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 

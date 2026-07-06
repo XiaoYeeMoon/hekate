@@ -222,7 +222,7 @@ static void _save_fb_to_bmp()
 	// Create notification box.
 	lv_obj_t * mbox = lv_mbox_create(lv_layer_top(), NULL);
 	lv_mbox_set_recolor_text(mbox, true);
-	lv_mbox_set_text(mbox, SYMBOL_CAMERA"  #FFDD00 截图保存中...#");
+	lv_mbox_set_text(mbox, SYMBOL_CAMERA"  #FFDD00 正在保存截图...#");
 	lv_obj_set_width(mbox, LV_DPI * 4);
 	lv_obj_set_top(mbox, true);
 	lv_obj_align(mbox, NULL, LV_ALIGN_IN_TOP_LEFT, 0, 0);
@@ -298,7 +298,7 @@ static void _save_fb_to_bmp()
 	free(fb);
 
 	if (!res)
-		lv_mbox_set_text(mbox, SYMBOL_CAMERA"  #96FF00 截图保存成功!#");
+		lv_mbox_set_text(mbox, SYMBOL_CAMERA"  #96FF00 截图已保存!#");
 	else
 		lv_mbox_set_text(mbox, SYMBOL_WARNING"  #FFDD00 截图保存失败!#");
 	manual_system_maintenance(true);
@@ -997,13 +997,13 @@ static void _check_sd_card_removed(void *params)
 		lv_obj_set_style(dark_bg, &mbox_darken);
 		lv_obj_set_size(dark_bg, LV_HOR_RES, LV_VER_RES);
 
-		static const char * mbox_btn_map[] = { "\221重启(RCM)", "\221关机", "\221不要重新加载", "" };
-		static const char * mbox_btn_map_rcm_patched[] = { "\221重启", "\221关机", "\221不要重新加载", "" };
+		static const char * mbox_btn_map[] = { "\221重启(RCM)", "\221关机", "\221不重新加载", "" };
+		static const char * mbox_btn_map_rcm_patched[] = { "\221重启", "\221关机", "\221不重新加载", "" };
 		lv_obj_t *mbox = lv_mbox_create(dark_bg, NULL);
 		lv_mbox_set_recolor_text(mbox, true);
 		lv_obj_set_width(mbox, LV_HOR_RES * 6 / 9);
 
-		lv_mbox_set_text(mbox, "\n#FF8000 SD卡已经移除!#\n\n#96FF00 插入SD卡后, Nyx将重新加载.#\n\n您可以使用UMS而不用移除SD卡.\n");
+		lv_mbox_set_text(mbox, "\n#FF8000 检测到SD卡已取出!#\n\n#96FF00 重新插入后Nyx界面将重新加载.#\n\n提示:你可以使用工具里的USB工具, 不需要取出SD卡.\n");
 		lv_mbox_add_btns(mbox, h_cfg.rcm_patched ? mbox_btn_map_rcm_patched : mbox_btn_map, _removed_sd_action);
 
 		lv_obj_align(mbox, NULL, LV_ALIGN_CENTER, 0, 0);
@@ -1035,9 +1035,9 @@ static void _nyx_emmc_issues_warning(void *params)
 
 		lv_mbox_set_text(mbox,
 			"#FF8000 eMMC问题警告#\n\n"
-			"#FFDD00 你的eMMC以较慢模式初始化!#\n"
-			"#FFDD00 可能是硬件问题!#\n\n"
-			"你可以通过以下方式检查\n#C7EA46 主机信息# -> #C7EA46 eMMC#");
+			"#FFDD00 eMMC以慢速模式初始化!#\n"
+			"#FFDD00 这可能是硬件问题!#\n\n"
+			"请检查\n#C7EA46 主机信息# -> #C7EA46 eMMC#");
 
 		lv_mbox_add_btns(mbox, mbox_btn_map, nyx_mbox_action);
 		lv_obj_set_width(mbox, LV_HOR_RES / 9 * 5);
@@ -1067,11 +1067,11 @@ static lv_res_t _create_mbox_reboot_ofw()
 
 	lv_mbox_set_text(mbox,
 		"#FF8000 警告#\n\n"
-		"#FFDD00 你的真实DRAM ID与RAM不匹配！#\n"
-		"#FFDD00 密度和rank存在差异！#\n\n"
-		"#FFDD00 选择以这种方式启动会导致#\n"
-		"#FFDD00 性能下降甚至崩溃。#\n\n"
-		"你真的想要通过OFW方式启动吗？#");
+		"#FFDD00 实际DRAM ID与RAM不匹配！#\n"
+		"#FFDD00 密度与rank可能存在差异！#\n\n"
+		"#FFDD00 继续启动可能会导致#\n"
+		"#FFDD00 性能下降乃至崩溃。#\n\n"
+		"确定要继续以官方系统模式启动吗？#");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, _reboot_ofw_action);
 
@@ -1131,8 +1131,8 @@ static lv_res_t _create_mbox_reload(lv_obj_t *btn)
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES * 4 / 10);
 
-	lv_mbox_set_text(mbox, "#FF8000 您确定要#\n#FF8000 重新加载hekate和Nyx吗?#\n\n"
-		"同时会检查\n#96FF00 bootloader/update.bin#\n以获取hekate更新");
+	lv_mbox_set_text(mbox, "#FF8000 确定要#\n#FF8000 重新加载hekate引导及Nyx界面吗?#\n\n"
+		"同时也会通过\n#96FF00 bootloader/update.bin#\n路径检测hekate是否有更新.");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, reload_action);
 
@@ -1148,9 +1148,9 @@ static lv_res_t _create_mbox_reboot(lv_obj_t *btn)
 	lv_obj_set_style(dark_bg, &mbox_darken);
 	lv_obj_set_size(dark_bg, LV_HOR_RES, LV_VER_RES);
 
-	static const char * mbox_btn_map[] = { "\221OFW", "\221RCM", "\221取消", "" };
-	static const char * mbox_btn_map_autorcm[] = { "\261OFW", "\221RCM", "\221取消", "" };
-	static const char * mbox_btn_map_patched[] = { "\221OFW", "\221正常模式", "\221取消", "" };
+	static const char * mbox_btn_map[] = { "\221官方系统", "\221RCM", "\221取消", "" };
+	static const char * mbox_btn_map_autorcm[] = { "\261官方系统", "\221RCM", "\221取消", "" };
+	static const char * mbox_btn_map_patched[] = { "\221官方系统", "\221正常重启", "\221取消", "" };
 	lv_obj_t *mbox = lv_mbox_create(dark_bg, NULL);
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES / 2);
@@ -1184,7 +1184,7 @@ static lv_res_t _create_mbox_poweroff(lv_obj_t *btn)
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES * 4 / 10);
 
-	lv_mbox_set_text(mbox, "#FF8000 你真的想#\n#FF8000 关机吗?#");
+	lv_mbox_set_text(mbox, "#FF8000 确定要关机吗?#");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, _poweroff_action);
 
@@ -1677,7 +1677,7 @@ static lv_res_t _create_window_home_launch(lv_obj_t *btn)
 	bool combined_cfg = false;
 	if (btn)
 	{
-		if (strcmp(lv_label_get_text(lv_obj_get_child(btn, NULL)) + 8,"启动#"))
+		if (strcmp(lv_label_get_text(lv_obj_get_child(btn, NULL)) + 8,"启动菜单#"))
 			more_cfg = true;
 	}
 	else
@@ -1694,11 +1694,11 @@ static lv_res_t _create_window_home_launch(lv_obj_t *btn)
 	}
 
 	if (!btn)
-		win = create_window_launch(SYMBOL_GPS" hekate - 启动");
+		win = create_window_launch(SYMBOL_GPS" hekate - 启动菜单");
 	else if (!more_cfg)
-		win = create_window_launch(SYMBOL_GPS" 启动");
+		win = create_window_launch(SYMBOL_GPS" 启动菜单");
 	else
-		win = create_window_launch(SYMBOL_GPS" 更多配置");
+		win = create_window_launch(SYMBOL_GPS" 其他配置");
 
 	lv_win_add_btn(win, NULL, SYMBOL_LIST" 日志 #D0D0D0 OFF#", logs_onoff_toggle);
 	launch_logs_enable = false;
@@ -1982,15 +1982,15 @@ failed_sd_mount:
 		{
 			lv_label_set_static_text(label_error,
 				"#FFDD00 未发现启动项...#\n"
-				"请检查 #96FF00 bootloader/hekate_ipl.ini# 是否存在启动项\n"
-				"或者使用 #C7EA46 更多配置# 按钮来查看启动项.");
+				"请检查 #96FF00 bootloader/hekate_ipl.ini# 是否存在启动项,\n"
+				"也可查看 #C7EA46 其他配置# 菜单是否有其他启动项.");
 		}
 		else
 		{
 			lv_label_set_static_text(label_error,
 				"#FFDD00 未找到包含启动项的 .ini文件...#\n"
-				"请检查 .ini文件是否存在于 #96FF00 bootloader/ini/#\n"
-				"并且文件中至少包含一个启动项.");
+				"请检查 #96FF00 bootloader/ini/# 路径下是否存在 .ini 文件,\n"
+				"且文件中至少需包含一个启动项.");
 		}
 
 		lv_obj_set_pos(label_error, 19, 0);
@@ -2017,7 +2017,7 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	// Set tagline label.
 	lv_obj_t *label_tagline = lv_label_create(parent, NULL);
 	lv_obj_set_style(label_tagline, &hint_small_style_white);
-	lv_label_set_static_text(label_tagline, "满足你一切需求的全能引导程序");
+	lv_label_set_static_text(label_tagline, "Switch的全能引导工具");
 	lv_obj_set_pos(label_tagline, 50, 82);
 
 	static lv_style_t icons;
@@ -2043,7 +2043,7 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_align(label_btn, NULL, LV_ALIGN_CENTER, 0, -28);
 	lv_obj_t *label_btn2 = lv_label_create(btn_launch, NULL);
 	lv_label_set_recolor(label_btn2, true);
-	s_printf(btn_colored_text, "%s%s", text_color, " 启动#");
+	s_printf(btn_colored_text, "%s%s", text_color, " 启动菜单#");
 	lv_label_set_text(label_btn2, btn_colored_text);
 	lv_obj_align(label_btn2, NULL, LV_ALIGN_IN_TOP_MID, 0, 174);
 
@@ -2056,7 +2056,7 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	lv_btn_set_layout(btn_more_cfg, LV_LAYOUT_OFF);
 	lv_obj_align(label_btn, NULL, LV_ALIGN_CENTER, 0, -28);
 	label_btn2 = lv_label_create(btn_more_cfg, label_btn2);
-	s_printf(btn_colored_text, "%s%s", text_color, " 更多配置#");
+	s_printf(btn_colored_text, "%s%s", text_color, " 其他配置#");
 	lv_label_set_text(label_btn2, btn_colored_text);
 	lv_obj_set_pos(btn_more_cfg, 341, 160);
 	lv_obj_align(label_btn2, NULL, LV_ALIGN_IN_TOP_MID, 0, 174);
@@ -2076,7 +2076,7 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	// }
 
 	lv_obj_t *btn_nyx_options = lv_btn_create(parent, NULL);
-	_create_text_button(th, NULL, btn_nyx_options, SYMBOL_SETTINGS" Nyx设置", NULL);
+	_create_text_button(th, NULL, btn_nyx_options, SYMBOL_SETTINGS" Nyx界面设置", NULL);
 	//lv_obj_set_width(btn_nyx_options, 256);
 	lv_btn_set_action(btn_nyx_options, LV_BTN_ACTION_CLICK, create_win_nyx_options);
 	lv_obj_align(btn_nyx_options, NULL, LV_ALIGN_IN_BOTTOM_LEFT, LV_DPI / 4, -LV_DPI / 12);
@@ -2090,7 +2090,7 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	lv_btn_set_layout(btn_payloads, LV_LAYOUT_OFF);
 	lv_obj_align(label_btn, NULL, LV_ALIGN_CENTER, 0, -28);
 	label_btn2 = lv_label_create(btn_payloads, label_btn2);
-	s_printf(btn_colored_text, "%s%s", text_color, " Payload#");
+	s_printf(btn_colored_text, "%s%s", text_color, " Payloads#");
 	lv_label_set_text(label_btn2, btn_colored_text);
 	lv_obj_set_pos(btn_payloads, 632, 160);
 	lv_obj_align(label_btn2, NULL, LV_ALIGN_IN_TOP_MID, 0, 174);
@@ -2111,7 +2111,7 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_align(label_btn, NULL, LV_ALIGN_CENTER, 0, -28);
 	lv_obj_set_pos(btn_emummc, 959, 160);
 	label_btn2 = lv_label_create(btn_emummc, label_btn2);
-	s_printf(btn_colored_text, "%s%s", text_color, " emuMMC#");
+	s_printf(btn_colored_text, "%s%s", text_color, " 虚拟系统#");
 	lv_label_set_text(label_btn2, btn_colored_text);
 	lv_obj_align(label_btn2, NULL, LV_ALIGN_IN_TOP_MID, 0, 174);
 
@@ -2244,8 +2244,8 @@ void nyx_check_ini_changes()
 
 		lv_mbox_set_text(mbox,
 			"#FF8000 主要配置#\n\n"
-			"你修改了配置!\n\n"
-			"想保存吗?");
+			"配置已修改!\n\n"
+			"要保存吗?");
 
 		lv_mbox_add_btns(mbox, mbox_btn_map, _create_mbox_save_changes_action);
 		lv_obj_set_width(mbox, LV_HOR_RES / 9 * 5);

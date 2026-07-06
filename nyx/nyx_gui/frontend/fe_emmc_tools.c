@@ -478,8 +478,8 @@ static int _dump_emmc_part(emmc_tool_gui_t *gui, char *sd_path, int active_part,
 		f_close(&fp);
 
 		lv_obj_t *warn_mbox_bg = create_mbox_text(
-			"#FFDD00 检测到已存在的备份!#\n\n"
-			"按 #FF8000 电源键# 继续.\n按 #FF8000 音量键# 中断.", false);
+			"#FFDD00 备份已存在!#\n\n"
+			"按 #FF8000 电源键# 继续,\n按 #FF8000 音量键# 中断.", false);
 		manual_system_maintenance(true);
 
 		if (!(btn_wait() & BTN_POWER))
@@ -589,10 +589,10 @@ static int _dump_emmc_part(emmc_tool_gui_t *gui, char *sd_path, int active_part,
 					create_mbox_text(
 						"#96FF00 分卷备份正在进行!#\n\n"
 						"#96FF00 1.# 点击OK卸载SD卡.\n"
-						"#96FF00 2.# 取出SD卡并将文件移到有可用空间的位置.\n"
-						"#FFDD00 请勿移动partial.idx文件!#\n"
-						"#96FF00 3.# 重新插入SD卡.\n"
-						"#96FF00 4.# 再次选择相同选项以继续.", true);
+						"#96FF00 2.# 取出SD卡, 使用读卡器将备份文件移动到电脑硬盘等位置,\n"
+						"#FFDD00 但不要移动partial.idx文件!#\n"
+						"#96FF00 3.# 将SD卡重新插入主机.\n"
+						"#96FF00 4.# 再点一次刚才的选项以继续备份.", true);
 
 					partial_sd_full_unmount = true;
 
@@ -645,8 +645,8 @@ static int _dump_emmc_part(emmc_tool_gui_t *gui, char *sd_path, int active_part,
 			else
 			{
 				s_printf(gui->txt_buf,
-					"\n#FFDD00 从emuMMC读取%d个块时出错, LBA %08X,#\n"
-					"#FFDD00 emuMMC %08X (第%d次重试).#",
+					"\n#FFDD00 从虚拟系统读取%d个块时出错, LBA %08X,#\n"
+					"#FFDD00 虚拟系统 %08X (第%d次重试).#",
 					num, lba_curr + sd_sector_off, lba_curr, ++retryCount);
 			}
 			lv_label_ins_text(gui->label_log, LV_LABEL_POS_LAST, gui->txt_buf);
@@ -1421,11 +1421,11 @@ void restore_emmc_selected(emmcPartType_t restoreType, emmc_tool_gui_t *gui)
 	if (!gui->raw_emummc)
 		strcpy(txt_buf, "#FFDD00 可能会导致设备无法正常工作!#");
 	else
-		strcpy(txt_buf, "#FFDD00 可能会导致emuMMC无法正常工作!#");
+		strcpy(txt_buf, "#FFDD00 可能会导致虚拟系统无法正常工作!#");
 	strcat(txt_buf, "\n\n#FFDD00 你确定要继续吗?#");
 
 	if (gui->raw_emummc)
-		strcat(txt_buf, "\n\n只能恢复检测到的第一个emuMMC!");
+		strcat(txt_buf, "\n\n只能恢复检测到的第一个虚拟系统!");
 	if ((restoreType & PART_BOOT) || (restoreType & PART_GP_ALL))
 	{
 		strcat(txt_buf,
