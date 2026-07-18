@@ -479,7 +479,7 @@ static int _dump_emmc_part(emmc_tool_gui_t *gui, char *sd_path, int active_part,
 
 		lv_obj_t *warn_mbox_bg = create_mbox_text(
 			"#FFDD00 备份已存在!#\n\n"
-			"按 #FF8000 电源键# 继续,\n按 #FF8000 音量键# 中断.", false);
+			"按#FF8000 电源键#继续,\n按#FF8000 音量键#取消.", false);
 		manual_system_maintenance(true);
 
 		if (!(btn_wait() & BTN_POWER))
@@ -588,7 +588,7 @@ static int _dump_emmc_part(emmc_tool_gui_t *gui, char *sd_path, int active_part,
 				{
 					create_mbox_text(
 						"#96FF00 分卷备份正在进行!#\n\n"
-						"#96FF00 1.# 点击OK卸载SD卡.\n"
+						"#96FF00 1.# 点击OK弹出SD卡.\n"
 						"#96FF00 2.# 取出SD卡, 使用读卡器将备份文件移动到电脑硬盘等位置,\n"
 						"#FFDD00 但不要移动partial.idx文件!#\n"
 						"#96FF00 3.# 将SD卡重新插入主机.\n"
@@ -764,7 +764,7 @@ static int _dump_emmc_part(emmc_tool_gui_t *gui, char *sd_path, int active_part,
 
 		create_mbox_text(
 			"#96FF00 分卷备份完成!#\n\n"
-			"如果需要, 您现在可以将文件合并\n以获取完整的eMMC RAW GPP备份.", true);
+			"如果需要, 可以将备份文件合并\n以得到一份完整的eMMC原始分区备份.", true);
 
 		partial_sd_full_unmount = true;
 	}
@@ -1002,7 +1002,7 @@ static int _restore_emmc_part(emmc_tool_gui_t *gui, char *sd_path, int active_pa
 	if (f_stat(outFilename, &fno))
 	{
 		// If not, check if there are partial files and the total size matches.
-		strcpy(gui->txt_buf, "\n没有单个文件, 正在检查部分文件...\n");
+		strcpy(gui->txt_buf, "\n未找到单个完整文件, 正在检查分卷文件...\n");
 		lv_label_ins_text(gui->label_log, LV_LABEL_POS_LAST, gui->txt_buf);
 		manual_system_maintenance(true);
 
@@ -1165,7 +1165,7 @@ multipart_not_allowed:
 		else if (!gui->raw_emummc)
 		{
 			lv_obj_t *warn_mbox_bg = create_mbox_text(
-				"#FF8000 SD卡备份文件大小与#\n#FF8000 所选的eMMC部分大小不匹配!#\n\n"
+				"#FF8000 SD卡备份文件大小与#\n#FF8000 所选的eMMC分区大小不匹配!#\n\n"
 				"#FFDD00 备份文件可能已损坏!#\n#FFDD00 建议中止本次操作!#\n\n"
 				"按 #FF8000 电源键# 继续.\n按 #FF8000 音量键# 中止.", false);
 			manual_system_maintenance(true);
@@ -1173,7 +1173,7 @@ multipart_not_allowed:
 			if (!(btn_wait() & BTN_POWER))
 			{
 				lv_obj_del(warn_mbox_bg);
-				strcpy(gui->txt_buf, "\n#FF0000 SD卡备份文件大小与#\n#FF0000 所选的eMMC部分大小不匹配.#\n");
+				strcpy(gui->txt_buf, "\n#FF0000 SD卡备份文件大小与#\n#FF0000 所选的eMMC分区大小不匹配.#\n");
 				lv_label_ins_text(gui->label_log, LV_LABEL_POS_LAST, gui->txt_buf);
 				manual_system_maintenance(true);
 
@@ -1419,9 +1419,9 @@ void restore_emmc_selected(emmcPartType_t restoreType, emmc_tool_gui_t *gui)
 	manual_system_maintenance(true);
 
 	if (!gui->raw_emummc)
-		strcpy(txt_buf, "#FFDD00 可能会导致设备无法正常工作!#");
+		strcpy(txt_buf, "#FFDD00 存在一定变砖风险!#");
 	else
-		strcpy(txt_buf, "#FFDD00 可能会导致虚拟系统无法正常工作!#");
+		strcpy(txt_buf, "#FFDD00 虚拟系统存在一定变砖风险!#");
 	strcat(txt_buf, "\n\n#FFDD00 你确定要继续吗?#");
 
 	if (gui->raw_emummc)
@@ -1429,7 +1429,7 @@ void restore_emmc_selected(emmcPartType_t restoreType, emmc_tool_gui_t *gui)
 	if ((restoreType & PART_BOOT) || (restoreType & PART_GP_ALL))
 	{
 		strcat(txt_buf,
-			"\n\n您选择的模式\n只会恢复检测到的分区.\n"
+			"\n\n当前选择的模式\n只会恢复检测到的分区.\n"
 			"未检测到的分区会被跳过, \n并继续处理下一个分区.");
 	}
 
@@ -1448,13 +1448,13 @@ void restore_emmc_selected(emmcPartType_t restoreType, emmc_tool_gui_t *gui)
 		failsafe_wait--;
 	}
 
-	s_printf(txt_buf + orig_msg_len, "\n\n按 #FF8000 电源键# 继续.\n按 #FF8000 音量键# 中断.");
+	s_printf(txt_buf + orig_msg_len, "\n\n按#FF8000 电源键#继续.\n按#FF8000 音量键#取消.");
 	lv_mbox_set_text(warn_mbox, txt_buf);
 	manual_system_maintenance(true);
 
 	if (!(btn_wait() & BTN_POWER))
 	{
-		lv_label_set_text(gui->label_info, "#FFDD00 恢复操作已中止!#");
+		lv_label_set_text(gui->label_info, "#FFDD00 恢复操作已取消!#");
 		lv_obj_del(warn_mbox_bg);
 		goto out;
 	}
