@@ -146,14 +146,14 @@ static lv_res_t _create_mbox_autorcm_status(lv_obj_t *btn)
 	{
 		lv_mbox_set_text(mbox,
 			"AutoRCM已#C7EA46 开启!#\n\n"
-			"现在只需要按 #FF8000 电源键# 即可自动进入RCM模式.\n"
+			"现在只需要按#FF8000 电源键#即可自动进入RCM模式.\n"
 			"如果要取消AutoRCM, 请再次点击这里的AutoRCM按钮.");
 	}
 	else
 	{
 		lv_mbox_set_text(mbox,
 			"AutoRCM已#FF8000 关闭!#\n\n"
-			"启动过程已恢复正常, 现在需要按住 #FF8000 音量+# 键同时短接才能进入RCM模式.\n");
+			"启动过程已恢复正常, 现在需要按住#FF8000 音量+#键同时短接才能进入RCM模式.\n");
 	}
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, nyx_mbox_action);
@@ -200,7 +200,7 @@ static lv_res_t _create_mbox_hid(usb_ctxt_t *usbs)
 
 	lv_obj_t *lbl_tip = lv_label_create(mbox, NULL);
 	lv_label_set_recolor(lbl_tip, true);
-	lv_label_set_static_text(lbl_tip, "如需结束, 请按 #C7EA46 L3# + #C7EA46 HOME# 组合键或直接拔线.");
+	lv_label_set_static_text(lbl_tip, "如需结束, 请按#C7EA46 L3#+#C7EA46 HOME#组合键或直接拔线.");
 	lv_obj_set_style(lbl_tip, &hint_small_style);
 
 	lv_mbox_add_btns(mbox, mbox_btn_map_dis, nyx_mbox_action);
@@ -279,21 +279,21 @@ static lv_res_t _create_mbox_ums(usb_ctxt_t *usbs)
 		if (usbs->type == MMC_SD)
 		{
 			lv_label_set_static_text(lbl_tip,
-				"提示: 结束时, 请在系统中点击 #C7EA46 弹出#.\n"
+				"提示: 结束时, 请在系统中#C7EA46 弹出设备#.\n"
 				"       #FFDD00 请勿直接拔线!#");
 		}
 		else
 		{
 			lv_label_set_static_text(lbl_tip,
-				"提示: 结束时, 请在系统中点击 #C7EA46 弹出#.\n"
+				"提示: 结束时, 请在系统中#C7EA46 弹出设备#.\n"
 				"       #FFDD00 如果没有正常弹出, 可能需要拔线!#");
 		}
 	}
 	else
 	{
 		lv_label_set_static_text(lbl_tip,
-			"提示: 结束时, 请在系统中点击 #C7EA46 弹出#.\n"
-			"       直接拔线也可以.#");
+			"提示: 结束时, 请在系统中#C7EA46 弹出设备#.\n"
+			"       亦可直接拔线!#");
 	}
 	lv_obj_set_style(lbl_tip, &hint_small_style);
 
@@ -716,7 +716,7 @@ static lv_res_t _create_window_usb_tools(lv_obj_t *parent)
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
 		"将主机作为读卡器连接到到电脑或手机.\n"
-		"#C7EA46 支持所有操作系统. 权限为# #FF8000 读写.#");
+		"#C7EA46 支持所有操作系统. 权限为##FF8000 读写.#");
 
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn1, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
@@ -767,7 +767,7 @@ static lv_res_t _create_window_usb_tools(lv_obj_t *parent)
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
 		"在电脑上操作主机内部存储(eMMC)或虚拟系统的文件.\n"
-		"#C7EA46 默认访问权限为# #FF8000 只读.#");
+		"#C7EA46 默认权限为##FF8000 只读.#");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn_emu_gpp, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 
@@ -782,7 +782,7 @@ static lv_res_t _create_window_usb_tools(lv_obj_t *parent)
 	// Create read/write access button.
 	lv_obj_t *btn_write_access = lv_btn_create(h_write, NULL);
 	nyx_create_onoff_button(lv_theme_get_current(), h_write,
-		btn_write_access, SYMBOL_EDIT" 只读", _emmc_read_only_toggle, false);
+		btn_write_access, SYMBOL_EDIT" 只读开关", _emmc_read_only_toggle, false);
 	if (!n_cfg.ums_emmc_rw)
 		lv_btn_set_state(btn_write_access, LV_BTN_STATE_TGL_REL);
 	_emmc_read_only_toggle(btn_write_access);
@@ -1552,8 +1552,8 @@ static void _create_tab_tools_emmc_sd_usb(lv_theme_t *th, lv_obj_t *parent)
 	lv_label_set_static_text(label_txt2,
 		"将主机内部存储(eMMC)或虚拟系统部分或完整\n"
 		"备份到SD卡.\n"
-		"#C7EA46 支持# #FF8000 4GB# #C7EA46 及以上SD卡, #"
-		"#FF8000 FAT32# #C7EA46 和 ##FF8000 exFAT##C7EA46 文件系统.#");
+		"#C7EA46 支持##FF8000 4GB##C7EA46 及以上SD卡, #"
+		"#FF8000 FAT32##C7EA46 和##FF8000 exFAT##C7EA46 文件系统.#");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 
@@ -1569,8 +1569,8 @@ static void _create_tab_tools_emmc_sd_usb(lv_theme_t *th, lv_obj_t *parent)
 	lv_label_set_static_text(label_txt2,
 		"将主机内部存储(eMMC)或虚拟系统部分或完整地\n"
 		"从SD卡恢复.\n"
-		"#C7EA46 支持# #FF8000 4GB# #C7EA46 及以上SD卡, #"
-		"#FF8000 FAT32# #C7EA46 和 ##FF8000 exFAT##C7EA46 文件系统.#");
+		"#C7EA46 支持##FF8000 4GB##C7EA46 及以上SD卡, #"
+		"#FF8000 FAT32##C7EA46 和##FF8000 exFAT##C7EA46 文件系统.#");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn2, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 
@@ -1606,8 +1606,8 @@ static void _create_tab_tools_emmc_sd_usb(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_t *label_txt4 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt4, true);
 	lv_label_set_static_text(label_txt4,
-		"对SD卡进行分区, 为 #C7EA46 虚拟系统#,\n"
-		"#C7EA46 Android# 和 #C7EA46 Linux# 做准备. 也支持刷入Linux和Android系统.\n");
+		"对SD卡进行分区, 为#C7EA46 虚拟系统#,\n"
+		"#C7EA46 Android#和#C7EA46 Linux#做准备. 也支持刷入Linux和Android系统.\n");
 	lv_obj_set_style(label_txt4, &hint_small_style);
 	lv_obj_align(label_txt4, btn3, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 
@@ -1621,7 +1621,7 @@ static void _create_tab_tools_emmc_sd_usb(lv_theme_t *th, lv_obj_t *parent)
 	label_txt4 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt4, true);
 	lv_label_set_static_text(label_txt4,
-		"#C7EA46 USB大容量存储#, #C7EA46 手柄# 和其他USB工具.\n"
+		"#C7EA46 USB大容量存储#, #C7EA46 手柄#和其他USB工具.\n"
 		"大容量存储可以将Switch当作读卡器, 也可挂载主机内部存储(eMMC)\n"
 		"和虚拟系统. 还可将Switch映射为一个有线手柄.#");
 	lv_obj_set_style(label_txt4, &hint_small_style);
@@ -1667,7 +1667,7 @@ static void _create_tab_tools_arc_rcm_pkg12(lv_theme_t *th, lv_obj_t *parent)
 	lv_label_set_static_text(label_txt2,
 		"修复所有文件夹的归档位, 包括\n"
 		"根目录和虚拟系统的 \'Nintendo\' 文件夹.\n"
-		"#C7EA46 会为名称带有# #FF8000 .[ext]# #C7EA46 的文件夹设置归档位.\n"
+		"#C7EA46 会为名称带有##FF8000 .[ext]##C7EA46 的文件夹设置归档位.\n"
 		"#FF8000 当出现文件损坏提示时请使用此选项.#");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
@@ -1736,9 +1736,9 @@ static void _create_tab_tools_arc_rcm_pkg12(lv_theme_t *th, lv_obj_t *parent)
 	char *txt_buf = (char *)malloc(SZ_4K);
 
 	s_printf(txt_buf,
-		"开启后无需按 #C7EA46 音量+# 键以及 #C7EA46 短接# 即可进入RCM.\n"
-		"#FF8000 可随时恢复.#\n"
-		"#FF3C28 此选项的原理是故意破坏主机的启动文件, 因此如果没有hekate引导,#\n"
+		"开启后无需按#C7EA46 音量+#键及#C7EA46 短接#即可进入RCM模式.\n"
+		"#FF8000 此选项可随时关闭.#\n"
+		"#FF3C28 此选项的原理是故意破坏主机的启动文件, 因此如果没有引导,#\n"
 		"#FF3C28 主机将无法启动.#");
 
 	if (h_cfg.rcm_patched)
