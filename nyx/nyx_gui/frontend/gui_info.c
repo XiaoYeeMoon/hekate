@@ -1331,9 +1331,9 @@ static lv_res_t _create_window_hw_info_status(lv_obj_t *btn)
 
 	// Check if patched unit.
 	if (!fuse_check_patched_rcm())
-		strcat(txt_buf, "\n\n#96FF00 此设备未修复RCM漏洞#\n#96FF00 可软破!#");
+		strcat(txt_buf, "\n\n#96FF00 此设备未修复RCM漏洞,#\n#96FF00 可软破!#");
 	else
-		strcat(txt_buf, "\n\n#FF8000 此设备已修复RCM漏洞#\n#96FF00 不可软破!#");
+		strcat(txt_buf, "\n\n#FF8000 此设备已修复RCM漏洞,#\n#96FF00 不可软破!#");
 
 	lv_label_set_text(lb_desc2, txt_buf);
 
@@ -3093,7 +3093,7 @@ static lv_res_t _create_window_battery_status(lv_obj_t *btn)
 		u32 wattage = 0;
 		usb_pd_objects_t usb_pd;
 		bm92t36_get_source_info(&inserted, &usb_pd);
-		strcat(txt_buf, inserted ? "连接" : "断开");
+		strcat(txt_buf, inserted ? "已连接" : "断开");
 
 		// Select 5V is no PD contract.
 		wattage = iinlim * (usb_pd.pdo_no ? usb_pd.selected_pdo.voltage : 5);
@@ -3232,13 +3232,13 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	{
 		lv_label_set_static_text(label_txt2,
 			"查看Ipatches以及提取BootROM.\n"
-			"也可通过 #C7EA46 Lockpick RCM# 提取密钥.\n\n");
+			"也可通过#C7EA46 Lockpick RCM#提取密钥.\n\n");
 	}
 	else
 	{
 		lv_label_set_static_text(label_txt2,
 			"查看Ipatches以及提取BootROM.\n"
-			"也可通过 #C7EA46 Lockpick RCM# 提取密钥.\n"
+			"也可通过#C7EA46 Lockpick RCM#提取密钥.\n"
 			"#FFDD00 bootloader/payloads/Lockpick_RCM.bin文件不存在或版本过旧!#\n");
 	}
 
@@ -3271,9 +3271,9 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_t *label_txt4 = lv_label_create(h1, NULL);
 	lv_label_set_recolor(label_txt4, true);
 	lv_label_set_static_text(label_txt4,
-		"查看和提取 #C7EA46 熔丝# 和 #C7EA46 KFuses# 信息.\n"
+		"查看和提取#C7EA46 熔丝#和#C7EA46 KFuses#信息.\n"
 		"熔丝包含SoC/SKU和KFuses HDCP密钥信息.\n"
-		"也可看到 #C7EA46 内存颗粒#, #C7EA46 屏幕# 以及 #C7EA46 触摸面板# 的信息.");
+		"也可查看#C7EA46 内存颗粒#, #C7EA46 屏幕#以及#C7EA46 触摸面板#的信息.");
 	lv_obj_set_style(label_txt4, &hint_small_style);
 	lv_obj_align(label_txt4, btn3, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 
@@ -3321,7 +3321,7 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_t *label_txt5 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt5, true);
 	lv_label_set_static_text(label_txt5,
-		"查看有关eMMC或microSD及其分区表的信息.\n"
+		"查看有关eMMC(主机内部存储)或microSD及其分区表的信息.\n"
 		"还可以测试读取速度.");
 	lv_obj_set_style(label_txt5, &hint_small_style);
 	lv_obj_align(label_txt5, btn5, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
@@ -3346,7 +3346,7 @@ void create_tab_info(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_t *label_txt6 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt6, true);
 	lv_label_set_static_text(label_txt6,
-		"查看电池和电池充电器的相关信息.\n"
+		"查看电池和充电器的相关信息.\n"
 		"还可以提取电池充电芯片的寄存器信息.\n");
 	lv_obj_set_style(label_txt6, &hint_small_style);
 	lv_obj_align(label_txt6, btn7, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
