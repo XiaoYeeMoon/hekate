@@ -1037,9 +1037,9 @@ static lv_res_t _create_mbox_clock_edit(lv_obj_t *btn)
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 6);
 
-	lv_mbox_set_text(mbox, "请输入Nyx界面的 #C7EA46 日期# 和 #C7EA46 时间#.\n"
+	lv_mbox_set_text(mbox, "请输入引导界面显示的#C7EA46 日期#和#C7EA46时间#.\n"
 						   "仅用于引导界面, 显示在屏幕左下角.\n"
-						   "不影响系统时间.");
+						   "不影响其他系统.");
 
 	lv_obj_t *padding = lv_cont_create(mbox, NULL);
 	lv_cont_set_fit(padding, true, false);
@@ -1453,7 +1453,7 @@ static void _check_nyx_changes()
 		lv_mbox_set_recolor_text(mbox, true);
 
 		lv_mbox_set_text(mbox,
-			"#FF8000 Nyx配置#\n\n"
+			"#FF8000 Nyx设置#\n\n"
 			"有未保存的更改!\n\n"
 			"要保存吗?");
 
@@ -1483,7 +1483,7 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 {
 	lv_theme_t *th = lv_theme_get_current();
 
-	lv_obj_t *win = nyx_create_standard_window(SYMBOL_HOME" Nyx设置", _action_win_nyx_options_close);
+	lv_obj_t *win = nyx_create_standard_window(SYMBOL_HOME" Nyx界面设置", _action_win_nyx_options_close);
 
 	static lv_style_t h_style;
 	lv_style_copy(&h_style, &lv_style_transp);
@@ -1527,7 +1527,7 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 
 	lv_obj_t *label_txt2 = lv_label_create(sw_h2, NULL);
 	lv_label_set_recolor(label_txt2, true);
-	lv_label_set_static_text(label_txt2, "调整Nyx的 #C7EA46 背景色# 和 #C7EA46 强调色#\n");
+	lv_label_set_static_text(label_txt2, "调整引导界面的#C7EA46 背景色#和#C7EA46 强调色#.\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3 - 8);
 
@@ -1549,8 +1549,8 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_ddlist_set_options(ddlist,
 		"主页       \n"
 		"全部引导\n"
-		"启动菜单\n"
-		"其他配置");
+		"启动\n"
+		"更多配置");
 	lv_ddlist_set_selected(ddlist, n_cfg.home_screen);
 	lv_ddlist_set_action(ddlist, _home_screen_action);
 	lv_obj_align(ddlist, label_txt, LV_ALIGN_OUT_RIGHT_MID, LV_DPI * 2 / 3, 0);
@@ -1559,8 +1559,8 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
 		"选择引导启动时显示的画面.\n"
-		"#FF8000 全部引导:# #C7EA46 屏幕上显示全部启动引导选项.#\n"
-		"#FF8000 启动菜单/其他配置:# #C7EA46 和主页上点进相应按钮的界面相同.#");
+		"#FF8000 全部引导:# #C7EA46 屏幕上显示所有找到的启动引导选项.#\n"
+		"#FF8000 启动/更多配置:# #C7EA46 和主页上点进相应按钮的界面相同.#");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, label_txt, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1592,7 +1592,7 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_obj_t *btn3 = lv_btn_create(sw_h3, NULL);
 	lv_obj_t *label_btn3 = lv_label_create(btn3, NULL);
 	lv_btn_set_fit(btn3, true, true);
-	lv_label_set_static_text(label_btn3, SYMBOL_DOWNLOAD" 提取Joy-Con蓝牙信息");
+	lv_label_set_static_text(label_btn3, SYMBOL_DOWNLOAD" 提取Joy-Con配对信息");
 	lv_obj_align(btn3, label_sep, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, -LV_DPI / 3);
 	lv_btn_set_action(btn3, LV_BTN_ACTION_CLICK, _joycon_info_dump_action);
 
@@ -1600,7 +1600,7 @@ lv_res_t create_win_nyx_options(lv_obj_t *parrent_btn)
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
 		"提取Switch和Joy-Con的MAC地址以及与之关联的配对信息.\n"
-		"用于 #C7EA46 Android# 和 #C7EA46 Linux# 系统.");
+		"#C7EA46 Android#和#C7EA46 Linux#系统需要.");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn3, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1764,7 +1764,7 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
 		"启用自动启动时显示bootlogo的时间.\n"
-		"启用自动启动后如要进入hekate引导界面, 请在显示启动logo时按 #FF8000 音量-# 键.\n");
+		"启用自动启动后如要进入hekate引导界面, 请在显示启动logo时按#FF8000 音量-#键.\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, label_txt, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 4);
 
@@ -1773,13 +1773,13 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 
 	// Create Auto NoGC button.
 	lv_obj_t *btn2 = lv_btn_create(sw_h2, NULL);
-	nyx_create_onoff_button(th, sw_h2, btn2, SYMBOL_CHIP" 自动禁用游戏卡槽更新", auto_nogc_toggle, true);
+	nyx_create_onoff_button(th, sw_h2, btn2, SYMBOL_CHIP" 禁用游戏卡槽更新", auto_nogc_toggle, true);
 	lv_obj_align(btn2, line_sep, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 10);
 
 	label_txt2 = lv_label_create(sw_h2, NULL);
 	lv_label_set_recolor(label_txt2, true);
 	lv_label_set_static_text(label_txt2,
-		"阻止官方系统对主机内的游戏卡读取控制器进行自动更新.\n"
+		"阻止官方系统对主机内的游戏卡读取控制器进行更新.\n"
 		"官方上次更新为14.0.0系统. 此选项默认为自动."
 		"(ON: 自动) \n\n\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
@@ -1795,8 +1795,8 @@ void create_tab_options(lv_theme_t *th, lv_obj_t *parent)
 
 	label_txt2 = lv_label_create(sw_h3, NULL);
 	lv_label_set_static_text(label_txt2,
-		"在官方系统中选择关机后, 主机将在15秒后自动开机.\n"
-		"此选项启用后, 下一次注入payload时\n会自动关机.");
+		"部分情况下在官方系统中选择关机后, 主机会在15秒后自动开机.\n"
+		"此选项启用后, hekate引导会自动阻止这样的开机.\n");
 	lv_obj_set_style(label_txt2, &hint_small_style);
 	lv_obj_align(label_txt2, btn3, LV_ALIGN_OUT_BOTTOM_LEFT, LV_DPI / 4, LV_DPI / 12);
 
