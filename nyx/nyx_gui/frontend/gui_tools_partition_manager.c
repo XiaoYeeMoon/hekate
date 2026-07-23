@@ -1468,7 +1468,7 @@ static lv_res_t _action_flash_android(lv_obj_t *btn)
 	lv_obj_t *lbl_status = lv_label_create(mbox, NULL);
 	lv_label_set_recolor(lbl_status, true);
 	lv_label_set_text(lbl_status,
-		"此操作将刷入 #C7EA46 Kernel#, #C7EA46 DTB# 和 #C7EA46 Recovery#.\n"
+		"此操作将刷入#C7EA46 Kernel#, #C7EA46 DTB#和#C7EA46 Recovery#.\n"
 		"刷入成功后这些文件将自动删除.\n"
 		"是否继续?");
 
@@ -1735,7 +1735,7 @@ static lv_res_t _sd_create_mbox_start_partitioning()
 	{
 		// Failed to format.
 		s_printf((char *)buf, "#FFDD00 错误:# 格式化磁盘(%d)失败!\n\n"
-			"请检查SD卡是否正常.\n如果正常, 请将其格式化后重新插入, 然后\n按 #FF8000 电源键#!", mkfs_error);
+			"请检查SD卡是否正常.\n如果正常, 请将其格式化后重新插入, 然后\n按#FF8000 电源键#!", mkfs_error);
 
 		lv_label_set_text(lbl_status, (char *)buf);
 		lv_label_set_text(lbl_paths[0], " ");
@@ -3118,7 +3118,7 @@ lv_res_t create_window_partition_manager(bool emmc)
 
 	lv_obj_t *lbl = lv_label_create(h1, NULL);
 	lv_label_set_recolor(lbl, true);
-	lv_label_set_text(lbl, "选择 #FFDD00 新#分区布局:");
+	lv_label_set_text(lbl, "请选择#FFDD00 新#的分区布局:");
 
 	// Create disk layout blocks.
 	// HOS partition block.
@@ -3291,7 +3291,7 @@ lv_res_t create_window_partition_manager(bool emmc)
 		lv_label_set_static_text(lbl_notes,
 			"注1: 最多可自动备份#C7EA46 1.2GB#的数据. 如果卡上的数据超过此大小, 稍后需要手动备份.\n"
 			"注2: 调整虚拟系统大小会格式化USER分区, 其中包含游戏存档, 请确保游戏存档已有妥善备份.\n"
-			"注3: 检测到合适的分区和安装文件后, #C7EA46 刷入Linux# 和 #C7EA46 刷入Android# 按钮会激活, 可以刷入对应系统.\n");
+			"注3: 检测到合适的分区和安装文件后, #C7EA46 刷入Linux#和#C7EA46 刷入Android#按钮会激活, 可以刷入对应系统.\n");
 		lv_obj_align(lbl_notes, lbl_and, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 6 * 2);
 	}
 	else
@@ -3299,7 +3299,7 @@ lv_res_t create_window_partition_manager(bool emmc)
 		lv_label_set_static_text(lbl_notes,
 			"注1: 在所选分区之后的分区都将被清除.\n"
 			"注2: USER分区将被格式化, 其中包含游戏存档, 请确保游戏存档已有妥善备份.\n"
-			"注3: 检测到合适的分区和安装文件后, #C7EA46 刷入Linux# 和 #C7EA46 刷入Android# 会激活, 可以刷入对应系统.\n");
+			"注3: 检测到合适的分区和安装文件后, #C7EA46 刷入Linux#和#C7EA46 刷入Android#会激活, 可以刷入对应系统.\n");
 		lv_obj_align(lbl_notes, lbl_and, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 6 * 4);
 	}
 
