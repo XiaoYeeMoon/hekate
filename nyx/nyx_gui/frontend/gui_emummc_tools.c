@@ -257,7 +257,7 @@ static void _create_mbox_emummc_raw()
 			"#FF8000 选择一个分区继续:#\n\n");
 	}
 	else
-		s_printf(txt_buf, "#FFDD00 未找到适用分区!#\n\n");
+		s_printf(txt_buf, "#FFDD00 未找到可用分区!#\n\n");
 
 	s_printf(txt_buf + strlen(txt_buf),
 		"分区表:\n"
@@ -350,8 +350,8 @@ static lv_res_t _create_mbox_emummc_create(lv_obj_t *btn)
 	lv_mbox_set_text(mbox,
 		"欢迎使用#C7EA46 虚拟系统#创建工具!\n\n"
 		"请选择虚拟系统类型.\n"
-		"#FF8000 文件式虚拟系统# 以文件形式保存在SD卡上.\n"
-		"#FF8000 分区式虚拟系统# 以RAW镜像方式保存在一个单独分区内.");
+		"#FF8000 文件式虚拟系统#以文件形式保存在SD卡上.\n"
+		"#FF8000 分区式虚拟系统#以RAW镜像方式保存在一个单独分区内.");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, _create_emummc_action);
 
@@ -1174,7 +1174,7 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	lv_obj_t *label_txt4 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt4, true);
 	lv_label_set_static_text(label_txt4,
-		"创建一个新的 #C7EA46 文件式# 或 #C7EA46 分区式# 虚拟系统.\n"
+		"创建一个新的#C7EA46 文件式#或#C7EA46 分区式#虚拟系统.\n"
 		"支持从现有eMMC或eMMC备份创建.\n");
 
 	lv_obj_set_style(label_txt4, &hint_small_style);
@@ -1191,7 +1191,7 @@ lv_res_t create_win_emummc_tools(lv_obj_t *btn)
 	label_txt4 = lv_label_create(h2, NULL);
 	lv_label_set_recolor(label_txt4, true);
 	lv_label_set_static_text(label_txt4,
-		"将备份迁移至 #C7EA46 文件式虚拟系统# 或修复现有的\n#C7EA46 分区式虚拟系统#.\n");
+		"将备份迁移至#C7EA46 文件式虚拟系统#或修复现有的\n#C7EA46 分区式虚拟系统#.\n");
 	lv_obj_set_style(label_txt4, &hint_small_style);
 	lv_obj_align(label_txt4, btn4, LV_ALIGN_OUT_BOTTOM_LEFT, 0, LV_DPI / 3);
 
