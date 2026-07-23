@@ -832,8 +832,8 @@ static void _nyx_sd_card_issues_warning(void *param)
 	lv_mbox_set_text(mbox,
 		"#FF8000 SD卡问题警告#\n\n"
 		"#FFDD00 SD卡以1-bit模式初始化!#\n"
-		"#FFDD00 可能是连接器脱落或损坏!#\n\n"
-		"你可以通过以下方式检查\n#C7EA46 主机信息# -> #C7EA46 microSD#");
+		"#FFDD00 可能是卡槽出现问题!#\n\n"
+		"请前往查看\n#C7EA46 主机信息# -> #C7EA46 microSD#信息.");
 
 	lv_mbox_add_btns(mbox, mbox_btn_map, nyx_mbox_action);
 	lv_obj_set_width(mbox, LV_HOR_RES / 9 * 5);
@@ -1003,7 +1003,7 @@ static void _check_sd_card_removed(void *params)
 		lv_mbox_set_recolor_text(mbox, true);
 		lv_obj_set_width(mbox, LV_HOR_RES * 6 / 9);
 
-		lv_mbox_set_text(mbox, "\n#FF8000 检测到SD卡已取出!#\n\n#96FF00 重新插入后Nyx界面将重新加载.#\n\n提示:你可以使用工具里的USB工具, 不需要取出SD卡.\n");
+		lv_mbox_set_text(mbox, "\n#FF8000 检测到SD卡被取出!#\n\n#96FF00 重新插入后引导界面将重新加载.#\n\n提示:你可以使用USB工具连接电脑, 不需要取出SD卡.\n");
 		lv_mbox_add_btns(mbox, h_cfg.rcm_patched ? mbox_btn_map_rcm_patched : mbox_btn_map, _removed_sd_action);
 
 		lv_obj_align(mbox, NULL, LV_ALIGN_CENTER, 0, 0);
@@ -1037,7 +1037,7 @@ static void _nyx_emmc_issues_warning(void *params)
 			"#FF8000 eMMC问题警告#\n\n"
 			"#FFDD00 eMMC以慢速模式初始化!#\n"
 			"#FFDD00 这可能是硬件问题!#\n\n"
-			"请检查\n#C7EA46 主机信息# -> #C7EA46 eMMC#");
+			"请查看\n#C7EA46 主机信息# -> #C7EA46 eMMC#中的信息.");
 
 		lv_mbox_add_btns(mbox, mbox_btn_map, nyx_mbox_action);
 		lv_obj_set_width(mbox, LV_HOR_RES / 9 * 5);
@@ -1155,7 +1155,7 @@ static lv_res_t _create_mbox_reboot(lv_obj_t *btn)
 	lv_mbox_set_recolor_text(mbox, true);
 	lv_obj_set_width(mbox, LV_HOR_RES / 2);
 
-	lv_mbox_set_text(mbox, "#FF8000 选择重启目标:#");
+	lv_mbox_set_text(mbox, "#FF8000 请选择重启目标:#");
 
 	// No OFW support if fuses burnt to 7. Custom secmon is mandatory.
 	bool t210_8gb_dramid = !h_cfg.t210b01 && fuse_read_dramid(true) == LPDDR4_ICOSA_8GB_SAMSUNG_K4FBE3D4HM_MGXX;
@@ -1677,7 +1677,7 @@ static lv_res_t _create_window_home_launch(lv_obj_t *btn)
 	bool combined_cfg = false;
 	if (btn)
 	{
-		if (strcmp(lv_label_get_text(lv_obj_get_child(btn, NULL)) + 8,"启动菜单#"))
+		if (strcmp(lv_label_get_text(lv_obj_get_child(btn, NULL)) + 8,"启动#"))
 			more_cfg = true;
 	}
 	else
@@ -1694,11 +1694,11 @@ static lv_res_t _create_window_home_launch(lv_obj_t *btn)
 	}
 
 	if (!btn)
-		win = create_window_launch(SYMBOL_GPS" hekate - 启动菜单");
+		win = create_window_launch(SYMBOL_GPS" hekate - 启动");
 	else if (!more_cfg)
-		win = create_window_launch(SYMBOL_GPS" 启动菜单");
+		win = create_window_launch(SYMBOL_GPS" 启动");
 	else
-		win = create_window_launch(SYMBOL_GPS" 其他配置");
+		win = create_window_launch(SYMBOL_GPS" 更多配置");
 
 	lv_win_add_btn(win, NULL, SYMBOL_LIST" 日志 #D0D0D0 OFF#", logs_onoff_toggle);
 	launch_logs_enable = false;
@@ -1983,7 +1983,7 @@ failed_sd_mount:
 			lv_label_set_static_text(label_error,
 				"#FFDD00 未发现启动项...#\n"
 				"请检查 #96FF00 bootloader/hekate_ipl.ini# 是否存在启动项,\n"
-				"也可查看 #C7EA46 其他配置# 菜单是否有其他启动项.");
+				"也可查看 #C7EA46 更多配置# 菜单是否有其他启动项.");
 		}
 		else
 		{
@@ -2043,7 +2043,7 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	lv_obj_align(label_btn, NULL, LV_ALIGN_CENTER, 0, -28);
 	lv_obj_t *label_btn2 = lv_label_create(btn_launch, NULL);
 	lv_label_set_recolor(label_btn2, true);
-	s_printf(btn_colored_text, "%s%s", text_color, " 启动菜单#");
+	s_printf(btn_colored_text, "%s%s", text_color, " 启动#");
 	lv_label_set_text(label_btn2, btn_colored_text);
 	lv_obj_align(label_btn2, NULL, LV_ALIGN_IN_TOP_MID, 0, 174);
 
@@ -2056,7 +2056,7 @@ static void _create_tab_home(lv_theme_t *th, lv_obj_t *parent)
 	lv_btn_set_layout(btn_more_cfg, LV_LAYOUT_OFF);
 	lv_obj_align(label_btn, NULL, LV_ALIGN_CENTER, 0, -28);
 	label_btn2 = lv_label_create(btn_more_cfg, label_btn2);
-	s_printf(btn_colored_text, "%s%s", text_color, " 其他配置#");
+	s_printf(btn_colored_text, "%s%s", text_color, " 更多配置#");
 	lv_label_set_text(label_btn2, btn_colored_text);
 	lv_obj_set_pos(btn_more_cfg, 341, 160);
 	lv_obj_align(label_btn2, NULL, LV_ALIGN_IN_TOP_MID, 0, 174);
@@ -2208,7 +2208,7 @@ static void _create_status_bar(lv_theme_t * th)
 	//! TODO: Utilize it for more.
 	lv_obj_t *btn_mid = lv_btn_create(status_bar_bg, NULL);
 	lv_obj_t *lbl_mid = lv_label_create(btn_mid, NULL);
-	lv_label_set_static_text(lbl_mid, "保存选项");
+	lv_label_set_static_text(lbl_mid, "保存更改");
 	lv_obj_set_size(btn_mid, LV_DPI * 17 / 8, LV_DPI / 2);
 	lv_obj_align(btn_mid, NULL, LV_ALIGN_CENTER, 0, 0);
 	status_bar.mid = btn_mid;
@@ -2243,9 +2243,9 @@ void nyx_check_ini_changes()
 		lv_mbox_set_recolor_text(mbox, true);
 
 		lv_mbox_set_text(mbox,
-			"#FF8000 主要配置#\n\n"
-			"配置已修改!\n\n"
-			"要保存吗?");
+			"#FF8000 设置菜单#\n\n"
+			"设置有未保存的更改!\n\n"
+			"是否保存?");
 
 		lv_mbox_add_btns(mbox, mbox_btn_map, _create_mbox_save_changes_action);
 		lv_obj_set_width(mbox, LV_HOR_RES / 9 * 5);
@@ -2425,7 +2425,7 @@ static void _nyx_main_menu(lv_theme_t * th)
 	lv_page_set_style(tab_info, LV_PAGE_STYLE_BG, &no_padding);
 	lv_page_set_style(tab_info, LV_PAGE_STYLE_SCRL, &no_padding);
 
-	lv_obj_t *tab_options = lv_tabview_add_tab(tv, SYMBOL_SETTINGS" 选项");
+	lv_obj_t *tab_options = lv_tabview_add_tab(tv, SYMBOL_SETTINGS" 设置");
 
 	_create_tab_about(th, tab_about);
 	_create_tab_home(th, tab_home);
